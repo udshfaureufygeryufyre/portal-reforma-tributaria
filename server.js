@@ -7,7 +7,7 @@ app.use(express.static(path.join(__dirname)));
 
 // Rota coringa que garante que qualquer acesso entregue o seu index.html
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'portal_reforma_tribut_ria_brasil (3).html'));
+  res.sendFile(path.join(__dirname, 'portal-reforma-tributaria.html'));
 });
 
 // Porta padrão exigida pelo Fly.io
