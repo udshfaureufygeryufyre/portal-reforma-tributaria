@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal da Reforma Tributária 2026</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Portal da Reforma Tributária | CBS, IBS e IS em Foco</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -13,323 +13,958 @@
                 extend: {
                     colors: {
                         brand: {
+                            blue: '#0F2C59',
+                            lightBlue: '#1E40AF',
+                            teal: '#0D9488',
                             emerald: '#059669',
-                            dark: '#0f172a'
+                            gold: '#D97706',
+                            accent: '#2563EB',
+                            darkBg: '#0F172A',
+                            darkCard: '#1E293B'
                         }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
                     }
                 }
             }
         }
     </script>
-    <!-- FontAwesome Icons -->
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Ticker Animation */
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+        .animate-ticker {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: ticker 35s linear infinite;
+        }
+        .animate-ticker:hover {
+            animation-play-state: paused;
+        }
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.8);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between transition-colors duration-300">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 min-h-screen flex flex-col">
 
-    <!-- HEADER / TOPO -->
-    <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold shadow-md">
-                    <i class="fa-solid fa-scale-balanced text-lg"></i>
+    <!-- TOP TICKER DE BREAKING NEWS -->
+    <div class="bg-slate-950 text-white text-xs py-2 px-4 border-b border-slate-800 overflow-hidden relative z-50 flex items-center shadow-md">
+        <span class="bg-amber-500 text-slate-950 font-extrabold px-2.5 py-1 rounded text-[10px] uppercase tracking-wider mr-3 shrink-0 flex items-center gap-1.5 shadow">
+            <i class="fa-solid fa-bolt text-xs animate-pulse"></i> Última Hora
+        </span>
+        <div class="overflow-hidden w-full relative">
+            <div class="animate-ticker flex items-center gap-8 text-slate-300">
+                <span><strong class="text-amber-400">TCU / CBS:</strong> TCU fixa alíquota de referência da CBS em 11,30% (acima dos 8,8% iniciais).</span>
+                <span><strong class="text-rose-400">IVA Total:</strong> IBS (~18,70%) + CBS (11,30%) apontam IVA Dual próximo a 30,0%, acionando trava da LC 214/2025.</span>
+                <span><strong class="text-emerald-400">Resolução CGIBS 14/2026:</strong> Definidas diretrizes estaduais para a fase experimental de 2026.</span>
+                <span><strong class="text-blue-400">Fase de Teste 2026:</strong> CBS 0,9% e IBS 0,1% entram em homologação no Split Payment bancário.</span>
+                <!-- Loop Duplicate -->
+                <span><strong class="text-amber-400">TCU / CBS:</strong> TCU fixa alíquota de referência da CBS em 11,30% (acima dos 8,8% iniciais).</span>
+                <span><strong class="text-rose-400">IVA Total:</strong> IBS (~18,70%) + CBS (11,30%) apontam IVA Dual próximo a 30,0%, acionando trava da LC 214/2025.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3 shrink-0 cursor-pointer" onclick="switchTab('inicio')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-blue to-brand-emerald flex items-center justify-center text-white font-black text-xl shadow-md">
+                        RT
+                    </div>
+                    <div>
+                        <span class="text-lg font-bold tracking-tight text-brand-blue dark:text-white block leading-tight">Reforma Tributária <span class="text-brand-emerald">Brasil</span></span>
+                        <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-wider uppercase block">Portal Real-Time & IA Gemini</span>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-sm font-bold tracking-tight text-slate-900 dark:text-white uppercase">Portal da Reforma Tributária</h1>
-                    <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold tracking-wider flex items-center gap-1">
-                        <i class="fa-solid fa-circle text-[6px] animate-pulse"></i> Atualização Vigente 2026
+
+                <!-- Live Status & Gemini AI Trigger -->
+                <div class="hidden lg:flex items-center gap-3 bg-emerald-500/10 dark:bg-emerald-950/40 border border-emerald-500/30 px-3 py-1.5 rounded-full text-xs">
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                     </span>
+                    <span class="text-emerald-700 dark:text-emerald-300 font-semibold">Live Web Feed 2026 • Gemini IA</span>
+                    <button onclick="buscarAtualizacoesGemini()" class="ml-1 text-[10px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2 py-0.5 rounded transition flex items-center gap-1">
+                        <i class="fa-solid fa-rotate"></i> Atualizar
+                    </button>
+                </div>
+
+                <!-- Global Search Input -->
+                <div class="hidden md:flex items-center flex-1 max-w-xs relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="global-search" oninput="handleGlobalSearch(this.value)" placeholder="Buscar lei, tributo (CBS, IBS)..." 
+                        class="w-full pl-8 pr-3 py-1.5 rounded-lg text-xs border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald">
+                </div>
+
+                <!-- Desktop Nav Tabs -->
+                <nav class="hidden xl:flex space-x-1" id="desktop-nav">
+                    <button onclick="switchTab('inicio')" data-tab="inicio" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition-all text-brand-blue dark:text-blue-400 bg-blue-50 dark:bg-slate-800 border-b-2 border-brand-blue dark:border-blue-400">
+                        Início
+                    </button>
+                    <button onclick="switchTab('gemini-ia')" data-tab="gemini-ia" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-brand-blue dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-wand-magic-sparkles text-emerald-500 mr-1"></i> Notícias IA Live
+                    </button>
+                    <button onclick="switchTab('calculadoras')" data-tab="calculadoras" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-brand-blue dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Simuladores
+                    </button>
+                    <button onclick="switchTab('pilares')" data-tab="pilares" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-brand-blue dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Módulos Didáticos
+                    </button>
+                    <button onclick="switchTab('transicao')" data-tab="transicao" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-brand-blue dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Cronograma (2026-33)
+                    </button>
+                    <button onclick="switchTab('impacto')" data-tab="impacto" class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-brand-blue dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Impacto Setorial
+                    </button>
+                </nav>
+
+                <!-- Right Controls -->
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Alternar tema">
+                        <i class="fa-solid fa-moon text-base dark:hidden"></i>
+                        <i class="fa-solid fa-sun text-base hidden dark:block text-amber-400"></i>
+                    </button>
+                    
+                    <button onclick="openNotificationModal()" class="relative p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Alertas">
+                        <i class="fa-solid fa-bell text-base"></i>
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full animate-ping"></span>
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="xl:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
-                <button onclick="toggleDarkMode()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition" title="Alternar Modo Escuro">
-                    <i class="fa-solid fa-moon dark:hidden"></i>
-                    <i class="fa-solid fa-sun hidden dark:inline"></i>
-                </button>
-            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden xl:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-3 pb-4 space-y-2">
+            <button onclick="switchTab('inicio'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-house w-5 text-brand-emerald"></i> Início & Visão Geral
+            </button>
+            <button onclick="switchTab('gemini-ia'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles w-5 text-emerald-500"></i> Notícias IA Live (Gemini)
+            </button>
+            <button onclick="switchTab('calculadoras'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-calculator w-5 text-brand-emerald"></i> Calculadoras & Simulações
+            </button>
+            <button onclick="switchTab('pilares'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-cubes w-5 text-brand-emerald"></i> Módulos Didáticos
+            </button>
+            <button onclick="switchTab('transicao'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-timeline w-5 text-brand-emerald"></i> Cronograma (2026-2033)
+            </button>
+            <button onclick="switchTab('impacto'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-user-gear w-5 text-brand-emerald"></i> Impacto por Setor
+            </button>
         </div>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12 flex-grow w-full">
+    <!-- GLOBAL SEARCH RESULTS OVERLAY CONTAINER -->
+    <div id="search-overlay" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+        <div class="glass-card rounded-2xl p-6 shadow-2xl border border-brand-emerald/40 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-brand-emerald"></i> Resultados da Busca Global
+                </h3>
+                <button onclick="closeSearchOverlay()" class="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-white font-bold">
+                    <i class="fa-solid fa-xmark text-sm"></i> Fechar
+                </button>
+            </div>
+            <div id="search-results-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto">
+                <!-- Results populated dynamically -->
+            </div>
+        </div>
+    </div>
 
-        <!-- SEÇÃO: RADAR EM TEMPO REAL -->
-        <section class="bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-700 space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+
+        <!-- TAB 1: INÍCIO & HERO DASHBOARD -->
+        <section id="tab-inicio" class="tab-content block space-y-10">
+            
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-blue via-slate-900 to-indigo-950 text-white p-8 sm:p-12 shadow-2xl border border-slate-800">
+                <div class="absolute -right-20 -top-20 w-80 h-80 bg-brand-emerald/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+                            <i class="fa-solid fa-circle-check"></i> Guia Oficial e Atualizado da Reforma Tributária
+                        </div>
+                        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                            Descomplicando a Reforma Tributária
+                        </h1>
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed font-light">
+                            Acompanhe a transição dos 5 impostos atuais (PIS, Cofins, IPI, ICMS e ISS) para o <strong>IVA Dual (CBS + IBS)</strong> e o <strong>Imposto Seletivo (IS)</strong>. Calculadoras, análises e atualização com inteligência artificial ao vivo.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-4 pt-2">
+                            <button onclick="switchTab('calculadoras')" class="bg-brand-emerald hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all shadow-lg shadow-emerald-900/30 flex items-center gap-2">
+                                <i class="fa-solid fa-calculator"></i> Simular Meus Impostos
+                            </button>
+                            <button onclick="switchTab('gemini-ia')" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 rounded-xl font-semibold text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i> Consultar Notícias em Tempo Real
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+                        <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
+                            <span class="text-3xl font-black text-amber-400 block mb-1">11,30%</span>
+                            <span class="text-[11px] text-slate-300 uppercase tracking-wider font-semibold block">CBS (TCU)</span>
+                            <p class="text-[10px] text-slate-400 mt-1">Alíquota Federal de Referência</p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
+                            <span class="text-3xl font-black text-rose-400 block mb-1">~30,0%</span>
+                            <span class="text-[11px] text-slate-300 uppercase tracking-wider font-semibold block">IVA Dual Total</span>
+                            <p class="text-[10px] text-slate-400 mt-1">CBS 11,3% + IBS est. 18,7%</p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
+                            <span class="text-3xl font-black text-emerald-400 block mb-1">2026</span>
+                            <span class="text-[11px] text-slate-300 uppercase tracking-wider font-semibold block">Fase de Teste</span>
+                            <p class="text-[10px] text-slate-400 mt-1">0,9% CBS + 0,1% IBS no Split Payment</p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
+                            <span class="text-3xl font-black text-blue-400 block mb-1">0%</span>
+                            <span class="text-[11px] text-slate-300 uppercase tracking-wider font-semibold block">Cesta Básica</span>
+                            <p class="text-[10px] text-slate-400 mt-1">Isenção Total com Cashback</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Termômetro da Regulamentação Dinâmico -->
+            <div class="glass-card rounded-2xl p-6 shadow-sm space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-gauge-high text-brand-blue dark:text-blue-400"></i> Termômetro da Regulamentação
+                        </h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Acompanhamento dos marcos legais e Leis Complementares</p>
+                    </div>
+
+                    <!-- Filter Buttons -->
+                    <div class="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs overflow-x-auto">
+                        <button onclick="filterTermometro('todos')" id="filter-todos" class="term-filter-btn px-3 py-1.5 rounded-lg font-semibold bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm">Todos</button>
+                        <button onclick="filterTermometro('sancionado')" id="filter-sancionado" class="term-filter-btn px-3 py-1.5 rounded-lg font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900">Sancionados</button>
+                        <button onclick="filterTermometro('analise')" id="filter-analise" class="term-filter-btn px-3 py-1.5 rounded-lg font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900">Em Análise</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="termometro-grid">
+                    <!-- LC 214/2025 -->
+                    <div class="term-card bg-slate-50 dark:bg-slate-800/50 p-5 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between" data-status="sancionado">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/80 px-2.5 py-1 rounded-full uppercase">Sancionado</span>
+                                <i class="fa-solid fa-file-contract text-slate-400"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-base">LC 214/2025 (Lei Geral)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">Institui a CBS, o IBS e o Imposto Seletivo. Define regras de não cumulatividade, cashback e Cesta Básica com Alíquota Zero.</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between text-xs">
+                            <span class="text-slate-500">Vigência: 2026 (Testes)</span>
+                            <span class="text-emerald-500 font-bold">Aprovado</span>
+                        </div>
+                    </div>
+
+                    <!-- LC 227/2026 -->
+                    <div class="term-card bg-slate-50 dark:bg-slate-800/50 p-5 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between" data-status="sancionado">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/80 px-2.5 py-1 rounded-full uppercase">Sancionado</span>
+                                <i class="fa-solid fa-building-columns text-slate-400"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-base">LC 227/2026 (Comitê Gestor)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">Governança do Comitê Gestor do IBS (CG-IBS), arrecadação centralizada, repartição de receitas e ITCMD progressivo.</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between text-xs">
+                            <span class="text-slate-500">Estrutura Órgão</span>
+                            <span class="text-emerald-500 font-bold">Aprovado</span>
+                        </div>
+                    </div>
+
+                    <!-- Alíquota Padrão e Trava de Carga -->
+                    <div class="term-card bg-slate-50 dark:bg-slate-800/50 p-5 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between" data-status="analise">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] font-extrabold text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-950/80 px-2.5 py-1 rounded-full uppercase">Em Análise / Ajustes</span>
+                                <i class="fa-solid fa-percent text-slate-400"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-base">Alíquota-Padrão de Referência</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">Harmonização das taxas estaduais do IBS para respeitar a trava constitucional de limite de carga sobre o PIB.</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between text-xs">
+                            <span class="text-slate-500">Ajuste Fisco</span>
+                            <span class="text-amber-500 font-bold">Em Deliberação</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: GEMINI IA RADAR DE NOTÍCIAS AO VIVO -->
+        <section id="tab-gemini-ia" class="tab-content hidden space-y-8">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-medium bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                        <i class="fa-solid fa-bolt text-[10px]"></i> Conectado com Gemini Flash + Google Search Real-Time
-                    </span>
-                    <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white mt-2">
+                    <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs font-bold mb-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Conectado com Gemini 3 Flash + Google Search Real-Time
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-3">
                         Radar da Reforma em Tempo Real (10 Notícias Mais Recentes de 2026)
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    <p class="text-slate-600 dark:text-slate-400 text-xs mt-1">
                         Pesquisa ao vivo com as 10 últimas decisões publicadas no Diário Oficial da União, Congresso, Comitê Gestor e veículos de imprensa em 2026.
                     </p>
                 </div>
-                <button onclick="dispararBuscaGeral()" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition">
-                    <i class="fa-solid fa-rotate"></i> Buscar 10 Notícias Mais Recentes de 2026
+
+                <button onclick="buscarAtualizacoesGemini()" class="bg-brand-emerald hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs transition shadow-lg flex items-center gap-2 shrink-0">
+                    <i class="fa-solid fa-arrows-rotate animate-spin hidden" id="gemini-spin"></i>
+                    <i class="fa-solid fa-bolt" id="gemini-icon"></i> Buscar 10 Notícias Mais Recentes de 2026
                 </button>
             </div>
 
-            <div class="flex gap-2">
-                <input type="text" id="input-busca-geral" placeholder="Ex: Notícias recentes sobre a alíquota da CBS e IBS em 2026" class="flex-grow px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <button onclick="pesquisarCustomizada()" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-bold text-xs transition">
-                    Pesquisar
+            <!-- Prompt Box para Perguntas Personalizadas -->
+            <div class="glass-card p-4 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row gap-3">
+                <input type="text" id="gemini-custom-prompt" placeholder="Ex: Notícias recentes sobre a alíquota da CBS e IBS em 2026" 
+                    class="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-emerald">
+                <button onclick="consultarGeminiEspecifico()" class="bg-brand-blue hover:bg-blue-900 text-white px-5 py-2.5 rounded-xl font-bold text-xs transition">
+                    Pesquisar 10 Notícias Recentes
                 </button>
             </div>
 
-            <div id="container-resultado-geral" class="hidden space-y-4 pt-4 border-t border-slate-100 dark:border-slate-700">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <i class="fa-solid fa-newspaper text-emerald-600"></i> Resultados Oficiais Recentes
-                    </span>
-                    <span id="timestamp-busca" class="text-[10px] text-slate-400"></span>
-                </div>
-                <div id="conteudo-resultado-geral" class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs leading-relaxed space-y-3"></div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO: MÓDULOS DIDÁTICOS INTERATIVOS -->
-        <section class="space-y-6">
-            <div>
-                <h2 class="text-xl font-black tracking-tight text-slate-900 dark:text-white">Módulos Didáticos Interativos</h2>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Clique em qualquer módulo abaixo para ver o resumo completo e buscar as <strong>10 últimas atualizações de 2026</strong> sobre o tema em tempo real.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Módulo 1 -->
-                <div onclick="abrirDetalheModulo('iva')" class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-emerald-500 transition cursor-pointer flex flex-col justify-between group">
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 font-black flex items-center justify-center text-xs">1</span>
-                            <span class="text-[11px] font-bold text-emerald-600 group-hover:underline">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
-                        </div>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Unificação IVA Dual (CBS + IBS)</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Extinção gradual dos tributos PIS, Cofins, IPI, ICMS e ISS para criar a CBS (nível federal) e o IBS (estados/municípios).</p>
+            <!-- Feed Result Box -->
+            <div id="gemini-feed-container" class="space-y-4">
+                <div class="glass-card p-8 rounded-2xl border border-slate-200 dark:border-slate-800 text-center space-y-4">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-building-columns animate-pulse"></i>
                     </div>
-                </div>
-
-                <!-- Módulo 2 -->
-                <div onclick="abrirDetalheModulo('seletivo')" class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-emerald-500 transition cursor-pointer flex flex-col justify-between group">
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 font-black flex items-center justify-center text-xs">2</span>
-                            <span class="text-[11px] font-bold text-emerald-600 group-hover:underline">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
-                        </div>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Imposto Seletivo ("Imposto do Pecado")</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Sobretaxa que incide sobre produtos danosos à saúde ou ao meio ambiente (bebidas alcoólicas, cigarros, refrigerantes e minérios).</p>
-                    </div>
-                </div>
-
-                <!-- Módulo 3 -->
-                <div onclick="abrirDetalheModulo('cesta')" class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-emerald-500 transition cursor-pointer flex flex-col justify-between group">
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 font-black flex items-center justify-center text-xs">3</span>
-                            <span class="text-[11px] font-bold text-emerald-600 group-hover:underline">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
-                        </div>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Cesta Básica Zero & Cashback</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Alimentos essenciais terão 0% de tributação e famílias de baixa renda (CadÚnico) receberão devolução do imposto pago na conta de luz e gás.</p>
-                    </div>
-                </div>
-
-                <!-- Módulo 4 -->
-                <div onclick="abrirDetalheModulo('split')" class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-emerald-500 transition cursor-pointer flex flex-col justify-between group">
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 font-black flex items-center justify-center text-xs">4</span>
-                            <span class="text-[11px] font-bold text-emerald-600 group-hover:underline">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
-                        </div>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Split Payment Bancário</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Retenção automática no momento do pagamento via cartão/PIX, separando a parte da empresa e enviando o imposto direto ao fisco.</p>
-                    </div>
-                </div>
-
-                <!-- Módulo 5 -->
-                <div onclick="abrirDetalheModulo('destino')" class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-emerald-500 transition cursor-pointer flex flex-col justify-between group">
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-900/40 text-teal-600 dark:text-teal-400 font-black flex items-center justify-center text-xs">5</span>
-                            <span class="text-[11px] font-bold text-emerald-600 group-hover:underline">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
-                        </div>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Princípio do Destino</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">O imposto passa a pertencer ao município/estado onde o produto é consumido, encerrando a guerra fiscal entre estados.</p>
-                    </div>
-                </div>
-
-                <!-- Módulo 6 -->
-                <div onclick="abrirDetalheModulo('cgibs')" class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-emerald-500 transition cursor-pointer flex flex-col justify-between group">
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 font-black flex items-center justify-center text-xs">6</span>
-                            <span class="text-[11px] font-bold text-emerald-600 group-hover:underline">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
-                        </div>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Comitê Gestor do IBS (CG-IBS)</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Órgão unificado sem vínculo partidário responsável por arrecadar e distribuir as verbas do IBS entre todos os estados e municípios.</p>
-                    </div>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Central Oficial de Atualizações 2026 (DOU, Ministério da Fazenda e CGIBS)</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
+                        Clique no botão abaixo para varrer a web em tempo real e trazer as 10 notícias e publicações mais recentes de 2026.
+                    </p>
+                    <button onclick="buscarAtualizacoesOficiaisDOU()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition shadow-lg inline-flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass font-bold"></i> Buscar 10 Notícias Mais Recentes de 2026 Agora
+                    </button>
                 </div>
             </div>
         </section>
 
-        <!-- SEÇÃO: ANÁLISE DE IMPACTO POR SETOR -->
-        <section class="space-y-6">
-            <div>
-                <h2 class="text-xl font-black tracking-tight text-slate-900 dark:text-white">Análise de Impacto por Setor</h2>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Como a nova regra afeta cada segmento econômico, comércio e varejo especializado, acompanhado das <strong>10 notícias mais recentes de 2026</strong> de cada setor.</p>
+        <!-- TAB 3: CALCULADORAS & SIMULADORES -->
+        <section id="tab-calculadoras" class="tab-content hidden space-y-10">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-3">
+                    <i class="fa-solid fa-calculator text-brand-emerald"></i> Central de Simulações Interativas (Alíquotas Reais 2026)
+                </h2>
+                <p class="text-slate-600 dark:text-slate-400 text-xs mt-1">
+                    Simule seus produtos ou serviços utilizando a alíquota fixa fixada pelo TCU para a CBS (11,30%) e a estimativa do IBS (~18,70%).
+                </p>
+            </div>
+
+            <!-- CALCULADORA IVA DUAL -->
+            <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-lg space-y-6 border border-slate-200 dark:border-slate-800">
+                <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-brand-emerald">Simulador Oficial de IVA Dual</span>
+                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Calculadora CBS (11,3%) + IBS (~18,7%)</h3>
+                    </div>
+                    <i class="fa-solid fa-receipt text-3xl text-slate-300 dark:text-slate-700"></i>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Form inputs -->
+                    <div class="lg:col-span-6 space-y-5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                Valor Bruto do Produto / Serviço (R$)
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-2.5 text-slate-400 font-medium text-sm">R$</span>
+                                <input type="number" id="calc-valor" value="1000" min="1" step="10" oninput="calcularImpostos()"
+                                    class="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-emerald focus:outline-none font-bold text-base">
+                            </div>
+                        </div>
+
+                        <!-- Manual Custom Rates Overrides -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                    Alíquota CBS Federal (%)
+                                </label>
+                                <input type="number" id="calc-cbs-custom" value="11.30" step="0.1" oninput="calcularImpostos()"
+                                    class="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                    Alíquota IBS Estadual (%)
+                                </label>
+                                <input type="number" id="calc-ibs-custom" value="18.70" step="0.1" oninput="calcularImpostos()"
+                                    class="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                Categoria do Produto / Redução Diferenciada
+                            </label>
+                            <select id="calc-setor" onchange="calcularImpostos()"
+                                class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-emerald focus:outline-none text-xs font-medium">
+                                <option value="padrao">Alíquota Padrão Geral (100% do IVA = 30,0%)</option>
+                                <option value="cesta_basica">Cesta Básica Nacional (Alíquota ZERO - 0%)</option>
+                                <option value="reduzido_60">Saúde, Educação, Agronegócio (Desconto de 60% = 12,0%)</option>
+                                <option value="reduzido_30">Profissões Regulamentadas (Advogados, Médicos, Eng.) (Desconto de 30% = 21,0%)</option>
+                                <option value="seletivo">Produto Nocivo / Imposto do Pecado (+ Sobretaxa 15% Seletivo)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                Regime Tributário da Empresa Vendedora
+                            </label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 cursor-pointer">
+                                    <input type="radio" name="regime" value="lucro" checked onchange="calcularImpostos()" class="text-brand-emerald focus:ring-brand-emerald">
+                                    <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">Lucro Presumido / Real</span>
+                                </label>
+                                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 cursor-pointer">
+                                    <input type="radio" name="regime" value="simples" onchange="calcularImpostos()" class="text-brand-emerald focus:ring-brand-emerald">
+                                    <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">Simples Nacional</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Output Box -->
+                    <div class="lg:col-span-6 bg-slate-950 text-white p-6 rounded-2xl flex flex-col justify-between space-y-6 shadow-inner border border-slate-800">
+                        <div>
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
+                                <span class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Detalhamento Calculado</span>
+                                <span id="res-badge-setor" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-2.5 py-0.5 rounded font-bold">Alíquota Padrão (30.0%)</span>
+                            </div>
+
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-slate-300">CBS (Federal - 11,30%)</span>
+                                    <span id="res-cbs" class="font-mono font-bold text-blue-400 text-sm">R$ 113,00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-slate-300">IBS (Estadual/Municipal - ~18,70%)</span>
+                                    <span id="res-ibs" class="font-mono font-bold text-teal-400 text-sm">R$ 187,00</span>
+                                </div>
+                                <div id="row-seletivo" class="flex justify-between items-center text-xs hidden text-amber-400">
+                                    <span>Imposto Seletivo (IS - 15,0%)</span>
+                                    <span id="res-is" class="font-mono font-bold text-sm">R$ 150,00</span>
+                                </div>
+                                <div class="pt-3 border-t border-slate-800 flex justify-between items-center">
+                                    <span class="font-bold text-slate-200 text-sm">Total IVA Novo</span>
+                                    <span id="res-total-imposto" class="font-mono font-extrabold text-2xl text-emerald-400">R$ 300,00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <span class="text-[10px] text-slate-400 block uppercase font-medium">Comparativo Sistema Antigo Estimado</span>
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <span id="res-antigo-total" class="font-mono text-slate-400 line-through text-xs">R$ 272,50</span>
+                                    <p class="text-[10px] text-slate-500">Estimativa tributos cumulativos passados</p>
+                                </div>
+                                <div class="text-right">
+                                    <span id="res-diferenca" class="text-[10px] font-bold text-amber-400 bg-amber-950/60 border border-amber-800/50 px-2 py-1 rounded">+10,1% Ajuste IVA</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: MÓDULOS DIDÁTICOS -->
+        <section id="tab-pilares" class="tab-content hidden space-y-8">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">
+                    Módulos Didáticos Interativos
+                </h2>
+                <p class="text-slate-600 dark:text-slate-400 text-xs mt-1">
+                    Clique em qualquer módulo abaixo para ver o resumo completo e buscar as <strong>10 últimas atualizações de 2026</strong> sobre o tema em tempo real.
+                </p>
+            </div>
+
+            <!-- Grid de Cards Interativos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div onclick="abrirDetalheModulo('iva_dual')" class="glass-card p-6 rounded-2xl space-y-3 cursor-pointer hover:border-brand-emerald transition shadow-sm hover:shadow-md group">
+                    <div class="flex justify-between items-center">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950 text-brand-blue dark:text-blue-400 flex items-center justify-center font-bold">
+                            1
+                        </div>
+                        <span class="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold px-2.5 py-1 rounded-full group-hover:bg-emerald-500 group-hover:text-white transition">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+                    <h3 class="font-bold text-base text-slate-900 dark:text-white group-hover:text-brand-emerald transition">Unificação IVA Dual (CBS + IBS)</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Extinção gradual dos tributos PIS, Cofins, IPI, ICMS e ISS para criar a CBS (nível federal) e o IBS (estados/municípios).
+                    </p>
+                </div>
+
+                <div onclick="abrirDetalheModulo('imposto_seletivo')" class="glass-card p-6 rounded-2xl space-y-3 cursor-pointer hover:border-brand-emerald transition shadow-sm hover:shadow-md group">
+                    <div class="flex justify-between items-center">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+                            2
+                        </div>
+                        <span class="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold px-2.5 py-1 rounded-full group-hover:bg-emerald-500 group-hover:text-white transition">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+                    <h3 class="font-bold text-base text-slate-900 dark:text-white group-hover:text-brand-emerald transition">Imposto Seletivo ("Imposto do Pecado")</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Sobretaxa que incide sobre produtos danosos à saúde ou ao meio ambiente (bebidas alcoólicas, cigarros, refrigerantes e minérios).
+                    </p>
+                </div>
+
+                <div onclick="abrirDetalheModulo('cesta_basica')" class="glass-card p-6 rounded-2xl space-y-3 cursor-pointer hover:border-brand-emerald transition shadow-sm hover:shadow-md group">
+                    <div class="flex justify-between items-center">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                            3
+                        </div>
+                        <span class="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold px-2.5 py-1 rounded-full group-hover:bg-emerald-500 group-hover:text-white transition">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+                    <h3 class="font-bold text-base text-slate-900 dark:text-white group-hover:text-brand-emerald transition">Cesta Básica Zero & Cashback</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Alimentos essenciais terão 0% de tributação e famílias de baixa renda (CadÚnico) receberão devolução do imposto pago na conta de luz e gás.
+                    </p>
+                </div>
+
+                <div onclick="abrirDetalheModulo('split_payment')" class="glass-card p-6 rounded-2xl space-y-3 cursor-pointer hover:border-brand-emerald transition shadow-sm hover:shadow-md group">
+                    <div class="flex justify-between items-center">
+                        <div class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+                            4
+                        </div>
+                        <span class="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold px-2.5 py-1 rounded-full group-hover:bg-emerald-500 group-hover:text-white transition">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+                    <h3 class="font-bold text-base text-slate-900 dark:text-white group-hover:text-brand-emerald transition">Split Payment Bancário</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Retenção automática no momento do pagamento via cartão/PIX, separando a parte da empresa e enviando o imposto direto ao fisco.
+                    </p>
+                </div>
+
+                <div onclick="abrirDetalheModulo('principio_destino')" class="glass-card p-6 rounded-2xl space-y-3 cursor-pointer hover:border-brand-emerald transition shadow-sm hover:shadow-md group">
+                    <div class="flex justify-between items-center">
+                        <div class="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
+                            5
+                        </div>
+                        <span class="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold px-2.5 py-1 rounded-full group-hover:bg-emerald-500 group-hover:text-white transition">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+                    <h3 class="font-bold text-base text-slate-900 dark:text-white group-hover:text-brand-emerald transition">Princípio do Destino</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        O imposto passa a pertencer ao município/estado onde o produto é consumido, encerrando a guerra fiscal entre estados.
+                    </p>
+                </div>
+
+                <div onclick="abrirDetalheModulo('comite_gestor')" class="glass-card p-6 rounded-2xl space-y-3 cursor-pointer hover:border-brand-emerald transition shadow-sm hover:shadow-md group">
+                    <div class="flex justify-between items-center">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
+                            6
+                        </div>
+                        <span class="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold px-2.5 py-1 rounded-full group-hover:bg-emerald-500 group-hover:text-white transition">Detalhes + 10 Notícias 2026 <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+                    <h3 class="font-bold text-base text-slate-900 dark:text-white group-hover:text-brand-emerald transition">Comitê Gestor do IBS (CG-IBS)</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Órgão unificado sem vínculo partidário responsável por arrecadar e distribuir as verbas do IBS entre todos os estados e municípios.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Modal / Painel de Detalhes do Módulo Selecionado -->
+            <div id="modulo-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 max-w-3xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+                    <button onclick="fecharModuloModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xl p-2 rounded-lg">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+
+                    <!-- Header Módulo -->
+                    <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                        <span id="mod-badge" class="text-[10px] font-bold uppercase tracking-wider text-brand-emerald bg-emerald-50 dark:bg-emerald-950/80 px-2.5 py-1 rounded-md">Módulo Didático</span>
+                        <h3 id="mod-titulo" class="text-2xl font-extrabold text-slate-900 dark:text-white mt-2">Título do Módulo</h3>
+                    </div>
+
+                    <!-- Resumo Didático Explicativo -->
+                    <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2">
+                        <h4 class="text-xs font-bold text-brand-blue dark:text-blue-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-book-open"></i> Resumo Didático e Conceitual
+                        </h4>
+                        <p id="mod-resumo" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                            Carregando explicação didática...
+                        </p>
+                    </div>
+
+                    <!-- 10 Últimas Atualizações Ao Vivo via Gemini Search -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+                            <h4 class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-bolt text-emerald-500"></i> 10 Últimas Atualizações Mais Recentes de 2026
+                            </h4>
+                            <span class="text-[10px] text-slate-400">Notícias ao vivo do DOU e Fisco em 2026</span>
+                        </div>
+                        
+                        <div id="mod-noticias-container" class="space-y-3">
+                            <div class="p-4 bg-slate-100 dark:bg-slate-800 rounded-xl text-center text-xs text-slate-500 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-spinner animate-spin text-brand-emerald text-base"></i> Buscando as 10 notícias e normas mais recentes de 2026 via inteligência artificial...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: CRONOGRAMA DE TRANSIÇÃO -->
+        <section id="tab-transicao" class="tab-content hidden space-y-8">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">
+                    Cronograma de Transição (2026 – 2033)
+                </h2>
+                <p class="text-slate-600 dark:text-slate-400 text-xs mt-1">
+                    Passo a passo da virada dos impostos antigos para o novo modelo do IVA Dual.
+                </p>
+            </div>
+
+            <div class="space-y-4 max-w-4xl mx-auto">
+                <div class="p-5 bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 rounded-r-xl">
+                    <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">2026 • Ano Experimental</span>
+                    <h4 class="font-bold text-sm text-slate-900 dark:text-white mt-1">Início da Fase de Testes do Split Payment</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                        Entrada em vigor com alíquotas reduzidas de teste: 0,9% para CBS e 0,1% para IBS. Impostos antigos continuam cobrados normalmente.
+                    </p>
+                </div>
+
+                <div class="p-5 bg-blue-50 dark:bg-blue-950/40 border-l-4 border-brand-blue rounded-r-xl">
+                    <span class="text-xs font-bold text-brand-blue dark:text-blue-400 uppercase">2027 • Cobrança Efetiva da CBS</span>
+                    <h4 class="font-bold text-sm text-slate-900 dark:text-white mt-1">Extinção de PIS/Cofins e IPI Parcial</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                        Cobrança integral da CBS (11,3%). PIS e Cofins são extintos definitivamente. Imposto Seletivo entra em vigor.
+                    </p>
+                </div>
+
+                <div class="p-5 bg-amber-50 dark:bg-amber-950/40 border-l-4 border-amber-500 rounded-r-xl">
+                    <span class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase">2029 a 2032 • Transição Proporcional</span>
+                    <h4 class="font-bold text-sm text-slate-900 dark:text-white mt-1">Substituição Gradual de ICMS e ISS pelo IBS</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                        Redução gradual das alíquotas do ICMS/ISS na proporção de 1/10 por ano enquanto a taxa do IBS sobe proporcionalmente.
+                    </p>
+                </div>
+
+                <div class="p-5 bg-indigo-50 dark:bg-indigo-950/40 border-l-4 border-indigo-500 rounded-r-xl">
+                    <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase">2033 • Implementação Completa</span>
+                    <h4 class="font-bold text-sm text-slate-900 dark:text-white mt-1">Vigência Total do IVA Dual</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                        Extinção definitiva de ICMS, ISS e IPI. O Brasil passa a rodar exclusivamente com CBS, IBS e Imposto Seletivo.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: IMPACTO SETORIAL -->
+        <section id="tab-impacto" class="tab-content hidden space-y-8">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">
+                    Análise de Impacto por Setor
+                </h2>
+                <p class="text-slate-600 dark:text-slate-400 text-xs mt-1">
+                    Como a nova regra afeta cada segmento econômico, comércio e varejo especializado, acompanhado das <strong>10 notícias mais recentes de 2026</strong> de cada setor.
+                </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Varejo -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between space-y-4">
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-cyan-600 flex items-center gap-1.5"><i class="fa-solid fa-store"></i> Comércio Varejista & Atacado</span>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Crédito Pleno no Estoque</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">O comércio passa a creditar 100% das compras B2B sem cumulatividade. O preço final é ajustado na ponta com a eliminação da tributação em cascata.</p>
+                <!-- Comércio em Geral e Varejo -->
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-cyan-500 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-base text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-store text-cyan-500"></i> Comércio Varejista & Atacado
+                        </h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                            <strong>Crédito Pleno no Estoque:</strong> O comércio passa a creditar 100% das compras B2B sem cumulatividade. O preço final é ajustado na ponta com a eliminação da tributação em cascata (PIS/Cofins e ICMS por dentro).
+                        </p>
                     </div>
-                    <button onclick="buscarNoticiasSetor('Atacado e Varejo', 'Comércio Varejista e Atacado')" class="w-full py-2.5 px-4 rounded-xl bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100 dark:hover:bg-cyan-900/50 font-bold text-xs transition flex items-center justify-center gap-2">
+                    <button onclick="buscarNoticiasSetor('comercio_varejo', 'Comércio Varejista e Atacado')" class="w-full bg-cyan-500/10 hover:bg-cyan-500 text-cyan-700 hover:text-white dark:text-cyan-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center gap-2 border border-cyan-500/30">
                         <i class="fa-solid fa-newspaper"></i> 10 Últimas Notícias do Setor (2026)
                     </button>
                 </div>
 
-                <!-- Farmacêutico -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between space-y-4">
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-rose-600 flex items-center gap-1.5"><i class="fa-solid fa-pills"></i> Setor Farmacêutico & Remédios</span>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Regime Diferenciado</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Medicamentos de uso continuado/essenciais possuem alíquota reduzida ou zerada, garantindo estabilidade e redução de custo ao consumidor final.</p>
+                <!-- Setor Farmacêutico -->
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-rose-500 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-base text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-pills text-rose-500"></i> Setor Farmacêutico & Remédios
+                        </h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                            <strong>Regime Diferenciado (Isenção ou -60%):</strong> Medicamentos de uso continuado/essenciais possuem <strong>Alíquota ZERO (0%)</strong> ou redução de <strong>60% na alíquota do IVA Dual</strong>, garantindo estabilidade e redução de custo para o consumidor final.
+                        </p>
                     </div>
-                    <button onclick="buscarNoticiasSetor('Farmacêutico e Medicamentos', 'Setor Farmacêutico')" class="w-full py-2.5 px-4 rounded-xl bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 font-bold text-xs transition flex items-center justify-center gap-2">
+                    <button onclick="buscarNoticiasSetor('farmaceutico', 'Setor Farmacêutico e Medicamentos')" class="w-full bg-rose-500/10 hover:bg-rose-500 text-rose-700 hover:text-white dark:text-rose-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center gap-2 border border-rose-500/30">
                         <i class="fa-solid fa-newspaper"></i> 10 Últimas Notícias do Setor (2026)
                     </button>
                 </div>
 
-                <!-- Cosméticos -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between space-y-4">
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-pink-600 flex items-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles"></i> Cosméticos & Produtos de Beleza</span>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Alíquota Padrão / Seletivo</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Perfumaria e cosméticos de luxo são tributados pela alíquota-padrão do IVA Dual, podendo incidir Imposto Seletivo sobre itens de alto impacto ambiental.</p>
+                <!-- Produtos de Beleza e Cosméticos -->
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-pink-500 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-base text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-spray-can-sparkles text-pink-500"></i> Cosméticos & Produtos de Beleza
+                        </h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                            <strong>Alíquota Padrão / Seletivo:</strong> Perfumaria e cosméticos de luxo são tributados pela alíquota-padrão do IVA Dual (30,0%), podendo incidir Imposto Seletivo sobre itens de alto impacto ambiental. Produtos de higiene pessoal mantêm regimes favorecidos.
+                        </p>
                     </div>
-                    <button onclick="buscarNoticiasSetor('Cosméticos e Perfumaria', 'Cosméticos e Produtos de Beleza')" class="w-full py-2.5 px-4 rounded-xl bg-pink-50 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 hover:bg-pink-100 dark:hover:bg-pink-900/50 font-bold text-xs transition flex items-center justify-center gap-2">
+                    <button onclick="buscarNoticiasSetor('cosmeticos_beleza', 'Cosméticos e Produtos de Beleza')" class="w-full bg-pink-500/10 hover:bg-pink-500 text-pink-700 hover:text-white dark:text-pink-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center gap-2 border border-pink-500/30">
                         <i class="fa-solid fa-newspaper"></i> 10 Últimas Notícias do Setor (2026)
                     </button>
                 </div>
 
                 <!-- Indústria -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between space-y-4">
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-blue-600 flex items-center gap-1.5"><i class="fa-solid fa-industry"></i> Indústria de Transformação</span>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Altamente Beneficiada</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Fim da cumulatividade e crédito financeiro pleno imediato. Redução acentuada do custo tributário de máquinas e exportações.</p>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-blue-500 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-base text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-industry text-blue-500"></i> Indústria de Transformação
+                        </h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                            <strong>Altamente Beneficiada:</strong> Fim da cumulatividade e crédito financeiro pleno imediato. Redução acentuada do custo tributário de máquinas e exportações.
+                        </p>
                     </div>
-                    <button onclick="buscarNoticiasSetor('Industria de Transformacao', 'Indústria de Transformação')" class="w-full py-2.5 px-4 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 font-bold text-xs transition flex items-center justify-center gap-2">
+                    <button onclick="buscarNoticiasSetor('industria', 'Indústria de Transformação')" class="w-full bg-blue-500/10 hover:bg-blue-500 text-blue-700 hover:text-white dark:text-blue-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center gap-2 border border-blue-500/30">
                         <i class="fa-solid fa-newspaper"></i> 10 Últimas Notícias do Setor (2026)
                     </button>
                 </div>
 
                 <!-- Serviços -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between space-y-4">
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-amber-600 flex items-center gap-1.5"><i class="fa-solid fa-concierge-bell"></i> Setor de Serviços</span>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Atenção ao Fluxo</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Como tem pouca compra de insumos com crédito, a alíquota nominal pode aumentar. Serviços essenciais possuem trava de desconto de 30% a 60%.</p>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-amber-500 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-base text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-concierge-bell text-amber-500"></i> Setor de Serviços
+                        </h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                            <strong>Atenção ao Fluxo:</strong> Como tem pouca compra de insumos com crédito, a alíquota nominal aumenta. Serviços essenciais possuem trava de desconto de 30% a 60%.
+                        </p>
                     </div>
-                    <button onclick="buscarNoticiasSetor('Prestacao de Servicos', 'Setor de Serviços')" class="w-full py-2.5 px-4 rounded-xl bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/50 font-bold text-xs transition flex items-center justify-center gap-2">
+                    <button onclick="buscarNoticiasSetor('servicos', 'Setor de Serviços')" class="w-full bg-amber-500/10 hover:bg-amber-500 text-amber-700 hover:text-white dark:text-amber-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center gap-2 border border-amber-500/30">
                         <i class="fa-solid fa-newspaper"></i> 10 Últimas Notícias do Setor (2026)
                     </button>
                 </div>
 
                 <!-- Agronegócio -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between space-y-4">
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-emerald-600 flex items-center gap-1.5"><i class="fa-solid fa-seedling"></i> Agronegócio e Alimentos</span>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-sm">Protegido</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Produtos da Cesta Básica com isenção total (0%) e insumos agropecuários com redução de 60% na alíquota do IVA.</p>
+                <div class="glass-card p-6 rounded-2xl border-l-4 border-emerald-500 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-base text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-wheat-awn text-emerald-500"></i> Agronegócio e Alimentos
+                        </h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                            <strong>Protegido:</strong> Produtos da Cesta Básica com isenção total (0%) e insumos agropecuários com redução de 60% na alíquota do IVA.
+                        </p>
                     </div>
-                    <button onclick="buscarNoticiasSetor('Agronegocio e Alimentos', 'Agronegócio e Alimentos')" class="w-full py-2.5 px-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 font-bold text-xs transition flex items-center justify-center gap-2">
+                    <button onclick="buscarNoticiasSetor('agronegocio', 'Agronegócio e Alimentos')" class="w-full bg-emerald-500/10 hover:bg-emerald-500 text-emerald-700 hover:text-white dark:text-emerald-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center gap-2 border border-emerald-500/30">
                         <i class="fa-solid fa-newspaper"></i> 10 Últimas Notícias do Setor (2026)
                     </button>
+                </div>
+            </div>
+
+            <!-- Modal para Exibição das 10 Notícias do Setor -->
+            <div id="setor-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 max-w-3xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+                    <button onclick="fecharSetorModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xl p-2 rounded-lg">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+
+                    <!-- Header Setor -->
+                    <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-brand-emerald bg-emerald-50 dark:bg-emerald-950/80 px-2.5 py-1 rounded-md">Notícias Setoriais IA Live (2026)</span>
+                        <h3 id="setor-modal-titulo" class="text-2xl font-extrabold text-slate-900 dark:text-white mt-2">Notícias do Setor</h3>
+                    </div>
+
+                    <!-- 10 Notícias ao Vivo via Gemini -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+                            <h4 class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-bolt text-emerald-500"></i> 10 Últimas Notícias Mais Recentes de 2026
+                            </h4>
+                            <span class="text-[10px] text-slate-400">Fonte: Diário Oficial e Ministério da Fazenda</span>
+                        </div>
+                        
+                        <div id="setor-noticias-container" class="space-y-3">
+                            <div class="p-4 bg-slate-100 dark:bg-slate-800 rounded-xl text-center text-xs text-slate-500 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-spinner animate-spin text-brand-emerald text-base"></i> Buscando as 10 últimas notícias mais recentes de 2026 via inteligência artificial...
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- MODAL DETALHE DO MÓDULO -->
-    <div id="modulo-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 border border-slate-200 dark:border-slate-700 shadow-xl max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between border-b pb-3 border-slate-100 dark:border-slate-700">
-                <h3 id="mod-titulo" class="font-black text-base text-slate-900 dark:text-white"></h3>
-                <button onclick="fecharModais()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <p id="mod-resumo" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed"></p>
-            <div class="space-y-2 pt-2">
-                <h4 class="text-xs font-bold text-emerald-600 uppercase tracking-wider"><i class="fa-solid fa-newspaper"></i> 10 Últimas Atualizações e Notícias Oficiais (2026)</h4>
-                <div id="mod-noticias-container" class="space-y-2"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL NOTÍCIAS DO SETOR -->
-    <div id="setor-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 border border-slate-200 dark:border-slate-700 shadow-xl max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between border-b pb-3 border-slate-100 dark:border-slate-700">
-                <h3 id="setor-modal-titulo" class="font-black text-base text-slate-900 dark:text-white"></h3>
-                <button onclick="fecharModais()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div class="space-y-2 pt-2">
-                <h4 class="text-xs font-bold text-emerald-600 uppercase tracking-wider"><i class="fa-solid fa-newspaper"></i> 10 Últimas Notícias do Setor em 2026</h4>
-                <div id="setor-noticias-container" class="space-y-2"></div>
-            </div>
-        </div>
-    </div>
-
     <!-- FOOTER -->
-    <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-6 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
-            Portal da Reforma Tributária 2026 &copy; Todos os direitos reservados.
+    <footer class="bg-slate-950 text-slate-400 text-xs py-8 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <p class="font-bold text-white text-sm">Portal da Reforma Tributária Brasil</p>
+                <p class="text-[11px] text-slate-500 mt-1">Informações em tempo real sobre IBS, CBS, Imposto Seletivo e Leis Complementares.</p>
+            </div>
+            <p class="text-[11px] text-slate-600">© 2026 Portal Reforma Tributária - Conectado ao Gemini IA</p>
         </div>
     </footer>
 
-    <!-- SCRIPTS JAVASCRIPT -->
+    <!-- JAVASCRIPT APP LOGIC -->
     <script>
+        /* --- NAVEGAÇÃO ENTRE ABAS --- */
+        function switchTab(tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) {
+                target.classList.remove('hidden');
+                target.classList.add('block');
+            }
+
+            const navBtns = document.querySelectorAll('#desktop-nav .nav-btn');
+            navBtns.forEach(btn => {
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.className = "nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition-all text-brand-blue dark:text-blue-400 bg-blue-50 dark:bg-slate-800 border-b-2 border-brand-blue dark:border-blue-400";
+                } else {
+                    btn.className = "nav-btn px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-brand-blue dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800";
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
 
-        const modulosInfo = {
-            iva: { titulo: "Unificação IVA Dual (CBS + IBS)", resumo: "Substituição completa dos tributos cumulativos por um IVA Dual moderno, garantindo crédito financeiro integral e desoneração total de investimentos e exportações." },
-            seletivo: { titulo: "Imposto Seletivo ('Imposto do Pecado')", resumo: "Tributação extra sobre a extração e fabricação de bens nocivos à saúde e ao meio ambiente, com alíquotas progressivas definidas por lei complementar." },
-            cesta: { titulo: "Cesta Básica Zero & Cashback", resumo: "Garantia de segurança alimentar através da alíquota zero em alimentos essenciais e mecanismos eletrônicos de devolução de impostos (Cashback) para famílias vulneráveis." },
-            split: { titulo: "Split Payment Bancário", resumo: "Inovação tecnológica que desconta o imposto automaticamente no segundo exato da transação de pagamento, mitigando a sonegação e acelerando a compensação." },
-            destino: { titulo: "Princípio do Destino", resumo: "Mudança estrutural onde a arrecadação do IBS pertence ao local onde o consumidor final adquire o produto ou serviço, acabando com a guerra fiscal entre estados." },
-            cgibs: { titulo: "Comitê Gestor do IBS (CG-IBS)", resumo: "Governança federativa autônoma integrada por estados e municípios para uniformizar a regulamentação, arrecadação e distribuição do imposto sobre bens e serviços." }
-        };
-
-        function fecharModais() {
-            document.getElementById('modulo-modal').classList.add('hidden');
-            document.getElementById('setor-modal').classList.add('hidden');
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu) menu.classList.toggle('hidden');
         }
 
-        // Busca Geral no Radar
-        async function dispararBuscaGeral() {
-            executarPesquisaServidor("Reforma Tributária 2026 últimas notícias Diário Oficial");
+        function filterTermometro(status) {
+            const cards = document.querySelectorAll('.term-card');
+            cards.forEach(card => {
+                if (status === 'todos' || card.getAttribute('data-status') === status) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            const filterBtns = document.querySelectorAll('.term-filter-btn');
+            filterBtns.forEach(btn => {
+                btn.className = "term-filter-btn px-3 py-1.5 rounded-lg font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900";
+            });
+            const activeBtn = document.getElementById(`filter-${status}`);
+            if (activeBtn) {
+                activeBtn.className = "term-filter-btn px-3 py-1.5 rounded-lg font-semibold bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm";
+            }
         }
 
-        async function pesquisarCustomizada() {
-            const termo = document.getElementById('input-busca-geral').value.trim();
-            if (!termo) return;
-            executarPesquisaServidor(termo);
+        function handleGlobalSearch(query) {
+            const overlay = document.getElementById('search-overlay');
+            const list = document.getElementById('search-results-list');
+            
+            if (!query || query.trim().length < 2) {
+                overlay.classList.add('hidden');
+                return;
+            }
+
+            overlay.classList.remove('hidden');
+            const q = query.toLowerCase();
+
+            const items = [
+                { title: 'CBS (Contribuição sobre Bens e Serviços)', desc: 'Imposto federal substituindo PIS, Cofins e IPI com alíquota de 11,30%.', tab: 'calculadoras' },
+                { title: 'IBS (Imposto sobre Bens e Serviços)', desc: 'Imposto estadual e municipal substituindo ICMS e ISS com alíquota de ~18,70%.', tab: 'calculadoras' },
+                { title: 'Imposto Seletivo (IS / Imposto do Pecado)', desc: 'Incidência sobre bebidas alcoólicas, cigarros, veículos poluentes e minérios.', tab: 'calculadoras' },
+                { title: 'Cesta Básica Nacional', desc: 'Isenção total com alíquota zero e devolução via cashback.', tab: 'calculadoras' },
+                { title: 'LC 214/2025', desc: 'Lei Complementar Geral que institui CBS, IBS e Imposto Seletivo.', tab: 'inicio' },
+                { title: 'LC 227/2026', desc: 'Regulamentação do Comitê Gestor do IBS e governança.', tab: 'inicio' },
+                { title: 'Fase de Teste (2026)', desc: 'Alíquotas reduzidas de 0,9% CBS e 0,1% IBS para adaptação de ERPs.', tab: 'calculadoras' }
+            ];
+
+            const filtered = items.filter(i => i.title.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q));
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<p class="text-xs text-slate-500 py-4 col-span-2 text-center">Nenhum termo correspondente encontrado.</p>`;
+            } else {
+                list.innerHTML = filtered.map(item => `
+                    <div onclick="switchTab('${item.tab}')" class="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-xl hover:bg-emerald-50 dark:hover:bg-slate-700 cursor-pointer transition border border-slate-200 dark:border-slate-700">
+                        <h4 class="font-bold text-xs text-slate-900 dark:text-white">${item.title}</h4>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-1">${item.desc}</p>
+                    </div>
+                `).join('');
+            }
         }
 
-        async function executarPesquisaServidor(query) {
-            const container = document.getElementById('conteudo-resultado-geral');
-            const wrapper = document.getElementById('container-resultado-geral');
-            wrapper.classList.remove('hidden');
+        function closeSearchOverlay() {
+            const overlay = document.getElementById('search-overlay');
+            if (overlay) overlay.classList.add('hidden');
+        }
+
+        function openNotificationModal() {
+            alert("Notificações da Reforma Tributária: Você receberá alertas em tempo real sobre decretos do Diário Oficial da União e resoluções do Comitê Gestor.");
+        }
+
+        /* --- BUSCA OFICIAL DIÁRIO OFICIAL DA UNIÃO E GOVERNO (10 NOTÍCIAS) VIA PROXY NODE.JS --- */
+        async function buscarAtualizacoesOficiaisDOU() {
+            switchTab('gemini-ia');
+            const container = document.getElementById('gemini-feed-container');
+            const spin = document.getElementById('gemini-spin');
+            const icon = document.getElementById('gemini-icon');
+
+            if (spin) spin.classList.remove('hidden');
+            if (icon) icon.classList.add('hidden');
 
             container.innerHTML = `
-                <div class="text-center py-6 text-slate-500 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-spinner animate-spin text-emerald-600 text-base"></i> Consultando bases oficiais de 2026 em tempo real...
+                <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 text-center space-y-3">
+                    <i class="fa-solid fa-spinner animate-spin text-2xl text-brand-emerald"></i>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 font-semibold">Pesquisando as 10 notícias e atos mais recentes de 2026 no Diário Oficial da União (in.gov.br), Portal da Fazenda e Comitê Gestor...</p>
                 </div>
             `;
 
@@ -337,28 +972,196 @@
                 const response = await fetch('/api/buscar-noticias', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: query })
+                    body: JSON.stringify({ query: 'Reforma Tributaria 2026 CBS IBS DOU alíquotas decretos' })
                 });
 
                 const result = await response.json();
                 const candidate = result.candidates?.[0];
 
                 if (candidate && candidate.content?.parts?.[0]?.text) {
-                    let text = candidate.content.parts[0].text;
-                    let htmlText = text
-                        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" class="text-emerald-600 dark:text-emerald-400 underline font-bold hover:opacity-80">$1 <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a>')
-                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                        .replace(/\n/g, '<br>');
+                    const text = candidate.content.parts[0].text;
+                    let htmlText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
 
-                    container.innerHTML = htmlText;
-                    document.getElementById('timestamp-busca').innerText = `Atualizado ao vivo: ${new Date().toLocaleTimeString()}`;
+                    container.innerHTML = `
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                            <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
+                                <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                                    <i class="fa-solid fa-building-columns"></i> 10 Notícias e Publicações Oficiais Mais Recentes (2026)
+                                </span>
+                                <span class="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 font-mono px-2 py-1 rounded">Atualizado ao vivo: ${new Date().toLocaleTimeString()}</span>
+                            </div>
+                            <div class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed space-y-3">
+                                ${htmlText}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `<div class="p-4 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 rounded-xl text-xs">A busca oficial não retornou registros no momento. Tente novamente em instantes.</div>`;
                 }
-            } catch (e) {
-                container.innerHTML = `<div class="text-rose-600 p-3">Erro ao carregar os dados em tempo real.</div>`;
+            } catch (err) {
+                container.innerHTML = `<div class="p-4 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 rounded-xl text-xs">Erro na conexão com o servidor do portal.</div>`;
+            } finally {
+                if (spin) spin.classList.add('hidden');
+                if (icon) icon.classList.remove('hidden');
             }
         }
 
-        // Detalhes do Módulo com 10 Notícias Específicas
+        async function buscarAtualizacoesGemini() {
+            await buscarAtualizacoesOficiaisDOU();
+        }
+
+        async function consultarGeminiEspecifico() {
+            const promptInput = document.getElementById('gemini-custom-prompt').value;
+            if (!promptInput || promptInput.trim().length < 3) return;
+            
+            switchTab('gemini-ia');
+            const container = document.getElementById('gemini-feed-container');
+
+            container.innerHTML = `
+                <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 text-center space-y-3">
+                    <i class="fa-solid fa-spinner animate-spin text-2xl text-brand-emerald"></i>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 font-semibold">Buscando as 10 notícias mais recentes de 2026 por: "${promptInput}"...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/buscar-noticias', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: promptInput })
+                });
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const text = candidate.content.parts[0].text;
+                    let htmlText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+
+                    container.innerHTML = `
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                            <h4 class="font-bold text-xs text-brand-emerald flex items-center gap-2">
+                                <i class="fa-solid fa-building-columns"></i> 10 Notícias Recentes de 2026: "${promptInput}"
+                            </h4>
+                            <div class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed space-y-2">
+                                ${htmlText}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `<div class="p-4 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 rounded-xl text-xs">Sem notícias para a pesquisa informada.</div>`;
+                }
+            } catch (e) {
+                container.innerHTML = `<div class="p-4 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 rounded-xl text-xs">Erro ao processar consulta.</div>`;
+            }
+        }
+
+        /* --- CALCULATOR LOGIC --- */
+        function calcularImpostos() {
+            const valorInput = document.getElementById('calc-valor');
+            if (!valorInput) return;
+
+            const valor = parseFloat(valorInput.value) || 0;
+            const customCBS = parseFloat(document.getElementById('calc-cbs-custom').value) / 100 || 0.113;
+            const customIBS = parseFloat(document.getElementById('calc-ibs-custom').value) / 100 || 0.187;
+            const setor = document.getElementById('calc-setor').value;
+            const regimeChecked = document.querySelector('input[name="regime"]:checked');
+            const regime = regimeChecked ? regimeChecked.value : 'lucro';
+
+            let cbsAliq = customCBS;
+            let ibsAliq = customIBS;
+            let isAliq = 0.0;
+            let badgeText = `Alíquota Padrão (${((cbsAliq + ibsAliq) * 100).toFixed(1)}%)`;
+
+            if (setor === 'cesta_basica') {
+                cbsAliq = 0;
+                ibsAliq = 0;
+                badgeText = "Alíquota ZERO (Cesta Básica)";
+            } else if (setor === 'reduzido_60') {
+                cbsAliq *= 0.40;
+                ibsAliq *= 0.40;
+                badgeText = `Redução de 60% (${((cbsAliq + ibsAliq) * 100).toFixed(1)}%)`;
+            } else if (setor === 'reduzido_30') {
+                cbsAliq *= 0.70;
+                ibsAliq *= 0.70;
+                badgeText = `Redução de 30% (${((cbsAliq + ibsAliq) * 100).toFixed(1)}%)`;
+            } else if (setor === 'seletivo') {
+                isAliq = 0.15;
+                badgeText = "Alíquota Padrão + Imposto Seletivo (+15%)";
+            }
+
+            if (regime === 'simples') {
+                cbsAliq = 0.025;
+                ibsAliq = 0.045;
+                badgeText += " (Faixa Média Simples)";
+            }
+
+            const valCbs = valor * cbsAliq;
+            const valIbs = valor * ibsAliq;
+            const valIs = valor * isAliq;
+            const totalNovos = valCbs + valIbs + valIs;
+
+            const totalAntigo = valor * (setor === 'cesta_basica' ? 0.07 : 0.2725);
+
+            document.getElementById('res-badge-setor').innerText = badgeText;
+            document.getElementById('res-cbs').innerText = "R$ " + valCbs.toFixed(2).replace('.', ',');
+            document.getElementById('res-ibs').innerText = "R$ " + valIbs.toFixed(2).replace('.', ',');
+            
+            const rowSeletivo = document.getElementById('row-seletivo');
+            if (isAliq > 0) {
+                rowSeletivo.classList.remove('hidden');
+                document.getElementById('res-is').innerText = "R$ " + valIs.toFixed(2).replace('.', ',');
+            } else {
+                rowSeletivo.classList.add('hidden');
+            }
+
+            document.getElementById('res-total-imposto').innerText = "R$ " + totalNovos.toFixed(2).replace('.', ',');
+            document.getElementById('res-antigo-total').innerText = "R$ " + totalAntigo.toFixed(2).replace('.', ',');
+
+            const resDiff = document.getElementById('res-diferenca');
+            if (totalNovos < totalAntigo) {
+                resDiff.innerText = "Economia de " + (((totalAntigo - totalNovos) / totalAntigo) * 100).toFixed(1) + "%";
+                resDiff.className = "text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-1 rounded";
+            } else {
+                resDiff.innerText = "Ajuste de +" + (((totalNovos - totalAntigo) / totalAntigo) * 100).toFixed(1) + "%";
+                resDiff.className = "text-[10px] font-bold text-amber-400 bg-amber-950/60 border border-amber-800/50 px-2 py-1 rounded";
+            }
+        }
+
+        /* --- DETALHAMENTO DOS MÓDULOS DIDÁTICOS E BUSCA VIA PROXY SERVIDOR --- */
+        const modulosInfo = {
+            iva_dual: {
+                titulo: "Unificação dos Impostos e Criação do IVA Dual (CBS e IBS)",
+                resumo: "O IVA Dual (Imposto sobre Valor Agregado) substitui 5 tributos complexos (PIS, Cofins, IPI, ICMS e ISS) por dois impostos modernos e transparentes: a CBS (Contribuição sobre Bens e Serviços - nível federal com alíquota de referência de 11,30%) e o IBS (Imposto sobre Bens e Serviços - estadual e municipal estimado em ~18,70%). Esse modelo garante a não cumulatividade plena (crédito imediato das compras) e fim do imposto escondido no cupom fiscal.",
+                query: "IVA Dual CBS IBS alíquota de referência 2026"
+            },
+            imposto_seletivo: {
+                titulo: "Imposto Seletivo ('Imposto do Pecado')",
+                resumo: "Trata-se de uma sobretaxa regulatória constitucional voltada para desestimular o consumo de produtos nocivos à saúde humana e ao meio ambiente. Incide sobre bebidas alcoólicas, cigarros, veículos poluentes, refrigerantes, bebidas açucaradas e extração de minérios. Ele é cobrado em uma única etapa da cadeia e não gera crédito acumulável.",
+                query: "Imposto Seletivo bebidas cigarros veículos minérios 2026"
+            },
+            cesta_basica: {
+                titulo: "Cesta Básica Nacional Alíquota Zero e Cashback",
+                resumo: "A Reforma Tributária institui a Cesta Básica Nacional Isenta com alíquota ZERO (0%) para uma lista definida de alimentos essenciais para a população. Além disso, cria o mecanismo inédito de Cashback Tributário, que devolve automaticamente parte dos impostos pagos na conta de luz, água e gás para famílias de baixa renda cadastradas no CadÚnico.",
+                query: "Cesta Básica Alíquota Zero devolução Cashback CadÚnico 2026"
+            },
+            split_payment: {
+                titulo: "Split Payment Bancário e Retenção Automática",
+                resumo: "O Split Payment é o mecanismo tecnológico bancário onde, no exato instante da liquidação financeira da venda (seja por PIX, cartão de crédito ou boleto), a instituição financeira recolhe automaticamente a fatia do imposto (CBS/IBS) diretamente para as contas do Fisco e credita apenas o valor líquido na conta da empresa vendedora.",
+                query: "Split Payment retenção automática bancária reforma tributária 2026"
+            },
+            principio_destino: {
+                titulo: "Princípio do Destino e Fim da Guerra Fiscal",
+                resumo: "Com o Princípio do Destino, a arrecadação dos tributos (IBS/CBS) passa a ocorrer integralmente no local onde o produto ou serviço é consumido (comprado), e não mais onde ele é produzido (origem). Isso elimina em definitivo os incentivos e benefícios fiscais predatórios concedidos isoladamente por estados, encerrando a guerra fiscal.",
+                query: "Princípio do Destino arrecadação IBS estados municípios 2026"
+            },
+            comite_gestor: {
+                titulo: "Comitê Gestor do IBS (CG-IBS) e Governança",
+                resumo: "O Comitê Gestor do IBS é a entidade pública unificada responsável por gerir, arrecadar, fiscalizar e distribuir a arrecadação do IBS proporcionalmente entre todos os 26 Estados, o Distrito Federal e os 5.570 Municípios do Brasil, operando de forma autônoma sem subordinação política.",
+                query: "Comitê Gestor do IBS CG-IBS normas estaduais 2026"
+            }
+        };
+
         async function abrirDetalheModulo(chave) {
             const info = modulosInfo[chave];
             if (!info) return;
@@ -371,8 +1174,8 @@
             modal.classList.remove('hidden');
 
             container.innerHTML = `
-                <div class="p-6 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-spinner animate-spin text-emerald-600 text-base"></i> Buscando as 10 notícias mais recentes de 2026 sobre "${info.titulo}"...
+                <div class="p-4 bg-slate-100 dark:bg-slate-800 rounded-xl text-center text-xs text-slate-500 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-spinner animate-spin text-brand-emerald text-base"></i> Buscando as 10 notícias e normas mais recentes de 2026 sobre "${info.titulo}"...
                 </div>
             `;
 
@@ -380,31 +1183,35 @@
                 const response = await fetch('/api/buscar-noticias', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: `Reforma Tributária 2026: ${info.titulo}` })
+                    body: JSON.stringify({ query: info.query })
                 });
 
                 const result = await response.json();
                 const candidate = result.candidates?.[0];
 
                 if (candidate && candidate.content?.parts?.[0]?.text) {
-                    let text = candidate.content.parts[0].text;
-                    let htmlText = text
-                        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" class="text-emerald-600 dark:text-emerald-400 underline font-bold hover:opacity-80">$1 <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a>')
-                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                        .replace(/\n/g, '<br>');
+                    const text = candidate.content.parts[0].text;
+                    let htmlText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
 
                     container.innerHTML = `
-                        <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs leading-relaxed space-y-3">
+                        <div class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs leading-relaxed text-slate-700 dark:text-slate-300 space-y-3">
                             ${htmlText}
                         </div>
                     `;
+                } else {
+                    container.innerHTML = `<div class="p-4 bg-amber-50 text-amber-800 rounded-xl text-xs">Sem notícias recentes de 2026 para este módulo no momento.</div>`;
                 }
             } catch (e) {
-                container.innerHTML = `<div class="p-4 text-rose-600 text-xs">Erro ao carregar notícias do módulo.</div>`;
+                container.innerHTML = `<div class="p-4 bg-rose-50 text-rose-800 rounded-xl text-xs">Erro ao carregar notícias do módulo. Tente novamente.</div>`;
             }
         }
 
-        // Notícias do Setor com 10 Notícias Específicas
+        function fecharModuloModal() {
+            const modal = document.getElementById('modulo-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        /* --- BUSCA DAS 10 NOTÍCIAS POR SETOR VIA PROXY SERVIDOR --- */
         async function buscarNoticiasSetor(chaveSetor, nomeSetor) {
             document.getElementById('setor-modal-titulo').innerText = nomeSetor;
             const modal = document.getElementById('setor-modal');
@@ -412,8 +1219,8 @@
             modal.classList.remove('hidden');
 
             container.innerHTML = `
-                <div class="p-6 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-spinner animate-spin text-emerald-600 text-base"></i> Pesquisando as 10 atualizações de 2026 para o setor de ${nomeSetor}...
+                <div class="p-4 bg-slate-100 dark:bg-slate-800 rounded-xl text-center text-xs text-slate-500 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-spinner animate-spin text-brand-emerald text-base"></i> Pesquisando no Diário Oficial e portais de notícias as 10 atualizações mais recentes de 2026 sobre ${nomeSetor}...
                 </div>
             `;
 
@@ -421,29 +1228,55 @@
                 const response = await fetch('/api/buscar-noticias', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: `Reforma Tributaria 2026 impacto setor ${nomeSetor}` })
+                    body: JSON.stringify({ query: `Reforma Tributaria 2026 setor ${nomeSetor}` })
                 });
 
                 const result = await response.json();
                 const candidate = result.candidates?.[0];
 
                 if (candidate && candidate.content?.parts?.[0]?.text) {
-                    let text = candidate.content.parts[0].text;
-                    let htmlText = text
-                        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" class="text-emerald-600 dark:text-emerald-400 underline font-bold hover:opacity-80">$1 <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a>')
-                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                        .replace(/\n/g, '<br>');
+                    const text = candidate.content.parts[0].text;
+                    let htmlText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
 
                     container.innerHTML = `
-                        <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs leading-relaxed space-y-3">
+                        <div class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs leading-relaxed text-slate-700 dark:text-slate-300 space-y-3">
                             ${htmlText}
                         </div>
                     `;
+                } else {
+                    container.innerHTML = `<div class="p-4 bg-amber-50 text-amber-800 rounded-xl text-xs">Nenhuma notícia recente de 2026 encontrada para este setor no momento.</div>`;
                 }
             } catch (e) {
-                container.innerHTML = `<div class="p-4 text-rose-600 text-xs">Erro ao carregar notícias do setor.</div>`;
+                container.innerHTML = `<div class="p-4 bg-rose-50 text-rose-800 rounded-xl text-xs">Erro ao carregar notícias do setor. Tente novamente em instantes.</div>`;
             }
         }
+
+        function fecharSetorModal() {
+            const modal = document.getElementById('setor-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // Single window.onload initialization
+        window.onload = function() {
+            calcularImpostos();
+        };
+
+        /* --- EXPLICIT GLOBAL WINDOW BINDINGS --- */
+        window.switchTab = switchTab;
+        window.toggleDarkMode = toggleDarkMode;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.filterTermometro = filterTermometro;
+        window.handleGlobalSearch = handleGlobalSearch;
+        window.closeSearchOverlay = closeSearchOverlay;
+        window.openNotificationModal = openNotificationModal;
+        window.buscarAtualizacoesOficiaisDOU = buscarAtualizacoesOficiaisDOU;
+        window.buscarAtualizacoesGemini = buscarAtualizacoesGemini;
+        window.consultarGeminiEspecifico = consultarGeminiEspecifico;
+        window.calcularImpostos = calcularImpostos;
+        window.abrirDetalheModulo = abrirDetalheModulo;
+        window.fecharModuloModal = fecharModuloModal;
+        window.buscarNoticiasSetor = buscarNoticiasSetor;
+        window.fecharSetorModal = fecharSetorModal;
     </script>
 </body>
 </html>
