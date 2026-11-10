@@ -853,21 +853,18 @@
     <script>
         /* --- NAVEGAÇÃO ENTRE ABAS --- */
         function switchTab(tabId) {
-            // Esconde todos os conteúdos de abas
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => {
                 content.classList.add('hidden');
                 content.classList.remove('block');
             });
 
-            // Exibe a aba selecionada
             const target = document.getElementById(`tab-${tabId}`);
             if (target) {
                 target.classList.remove('hidden');
                 target.classList.add('block');
             }
 
-            // Atualiza o estado dos botões da barra de navegação desktop
             const navBtns = document.querySelectorAll('#desktop-nav .nav-btn');
             navBtns.forEach(btn => {
                 if (btn.getAttribute('data-tab') === tabId) {
@@ -877,7 +874,6 @@
                 }
             });
 
-            // Rola para o topo suavemente
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -900,7 +896,6 @@
                 }
             });
 
-            // Atualiza botões de filtro
             const filterBtns = document.querySelectorAll('.term-filter-btn');
             filterBtns.forEach(btn => {
                 btn.className = "term-filter-btn px-3 py-1.5 rounded-lg font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900";
@@ -956,7 +951,7 @@
             alert("Notificações da Reforma Tributária: Você receberá alertas em tempo real sobre decretos do Diário Oficial da União e resoluções do Comitê Gestor.");
         }
 
-        /* --- BUSCA OFICIAL DIÁRIO OFICIAL DA UNIÃO E GOVERNO (10 NOTÍCIAS) --- */
+        /* --- BUSCA OFICIAL DIÁRIO OFICIAL DA UNIÃO E GOVERNO (10 NOTÍCIAS) VIA PROXY NODE.JS --- */
         async function buscarAtualizacoesOficiaisDOU() {
             switchTab('gemini-ia');
             const container = document.getElementById('gemini-feed-container');
@@ -966,8 +961,6 @@
             if (spin) spin.classList.remove('hidden');
             if (icon) icon.classList.add('hidden');
 
-            const hojeStr = new Date().toLocaleDateString('pt-BR');
-
             container.innerHTML = `
                 <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 text-center space-y-3">
                     <i class="fa-solid fa-spinner animate-spin text-2xl text-brand-emerald"></i>
@@ -975,32 +968,11 @@
                 </div>
             `;
 
-            const systemPrompt = `Hoje é o dia de navegação do usuário no ano de 2026. Você é um auditor responsável por monitorar o Diário Oficial da União (DOU), o Ministério da Fazenda (gov.br/fazenda) e o Comitê Gestor do IBS (cgibs.gov.br).
-Pesquise via Google Search e liste OBRIGATORIAMENTE as 10 NOTÍCIAS E PUBLICAÇÕES MAIS RECENTES E ATUALIZADAS DO ANO DE 2026 sobre a Reforma Tributária (CBS, IBS, IS).
-NÃO traga notícias de 2024 ou 2025. Traga apenas fatos, portarias, resoluções e notícias recentes do ano de 2026.
-Para cada um dos 10 itens traga:
-1. Data de Publicação / Recência em 2026
-2. Fonte Oficial
-3. Título do Ato / Notícia
-4. Resumo objetivo do impacto e regras.
-Organize os 10 pontos em uma lista de cartões numerados e legíveis.`;
-
-            const userQuery = `Pesquise no Diário Oficial da União (in.gov.br), Ministério da Fazenda e Comitê Gestor do IBS as 10 publicações, portarias, resoluções e notícias MAIS RECENTES DE 2026 sobre a Reforma Tributária (CBS 11,3%, IBS, Imposto Seletivo e Split Payment). Data atual de referência: ${hojeStr}.`;
-
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
             try {
-                const response = await fetch(apiUrl, {
+                const response = await fetch('/api/buscar-noticias', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ query: 'Reforma Tributaria 2026 CBS IBS DOU alíquotas decretos' })
                 });
 
                 const result = await response.json();
@@ -1008,15 +980,6 @@ Organize os 10 pontos em uma lista de cartões numerados e legíveis.`;
 
                 if (candidate && candidate.content?.parts?.[0]?.text) {
                     const text = candidate.content.parts[0].text;
-                    let sources = [];
-                    
-                    const groundingMetadata = candidate.groundingMetadata;
-                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
-                        sources = groundingMetadata.groundingAttributions
-                            .map(attr => ({ uri: attr.web?.uri, title: attr.web?.title }))
-                            .filter(s => s.uri && s.title);
-                    }
-
                     let htmlText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
 
                     container.innerHTML = `
@@ -1030,32 +993,19 @@ Organize os 10 pontos em uma lista de cartões numerados e legíveis.`;
                             <div class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed space-y-3">
                                 ${htmlText}
                             </div>
-                            ${sources.length > 0 ? `
-                                <div class="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
-                                    <span class="text-[10px] font-bold text-slate-400 block uppercase">Fontes Governamentais e Noticiosas do Feed:</span>
-                                    <div class="flex flex-wrap gap-2">
-                                        ${sources.map(s => `
-                                            <a href="${s.uri}" target="_blank" class="text-[10px] bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:underline px-2.5 py-1 rounded border border-emerald-200 dark:border-emerald-800 flex items-center gap-1 font-medium">
-                                                <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i> ${s.title}
-                                            </a>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            ` : ''}
                         </div>
                     `;
                 } else {
                     container.innerHTML = `<div class="p-4 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 rounded-xl text-xs">A busca oficial não retornou registros no momento. Tente novamente em instantes.</div>`;
                 }
             } catch (err) {
-                container.innerHTML = `<div class="p-4 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 rounded-xl text-xs">Erro na conexão com o servidor de pesquisa oficial.</div>`;
+                container.innerHTML = `<div class="p-4 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 rounded-xl text-xs">Erro na conexão com o servidor do portal.</div>`;
             } finally {
                 if (spin) spin.classList.add('hidden');
                 if (icon) icon.classList.remove('hidden');
             }
         }
 
-        /* --- INTEGRATION GEMINI API VIA FETCH --- */
         async function buscarAtualizacoesGemini() {
             await buscarAtualizacoesOficiaisDOU();
         }
@@ -1074,20 +1024,11 @@ Organize os 10 pontos em uma lista de cartões numerados e legíveis.`;
                 </div>
             `;
 
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: `Pesquise no Diário Oficial e portais de notícias de 2026 as 10 notícias MAIS RECENTES sobre: ${promptInput}. Retorne uma lista com as 10 matérias, datas recentes de 2026 e links.` }] }],
-                tools: [{ "google_search": {} }],
-                systemInstruction: { parts: [{ text: "Você é um auditor tributário focado no ano de 2026. Retorne 10 itens recentes com links das fontes em português." }] }
-            };
-
             try {
-                const response = await fetch(apiUrl, {
+                const response = await fetch('/api/buscar-noticias', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ query: promptInput })
                 });
 
                 const result = await response.json();
@@ -1107,6 +1048,8 @@ Organize os 10 pontos em uma lista de cartões numerados e legíveis.`;
                             </div>
                         </div>
                     `;
+                } else {
+                    container.innerHTML = `<div class="p-4 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 rounded-xl text-xs">Sem notícias para a pesquisa informada.</div>`;
                 }
             } catch (e) {
                 container.innerHTML = `<div class="p-4 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 rounded-xl text-xs">Erro ao processar consulta.</div>`;
@@ -1185,37 +1128,37 @@ Organize os 10 pontos em uma lista de cartões numerados e legíveis.`;
             }
         }
 
-        /* --- DETALHAMENTO DOS MÓDULOS DIDÁTICOS E BUSCA DAS 10 ÚLTIMAS NOTÍCIAS --- */
+        /* --- DETALHAMENTO DOS MÓDULOS DIDÁTICOS E BUSCA VIA PROXY SERVIDOR --- */
         const modulosInfo = {
             iva_dual: {
                 titulo: "Unificação dos Impostos e Criação do IVA Dual (CBS e IBS)",
                 resumo: "O IVA Dual (Imposto sobre Valor Agregado) substitui 5 tributos complexos (PIS, Cofins, IPI, ICMS e ISS) por dois impostos modernos e transparentes: a CBS (Contribuição sobre Bens e Serviços - nível federal com alíquota de referência de 11,30%) e o IBS (Imposto sobre Bens e Serviços - estadual e municipal estimado em ~18,70%). Esse modelo garante a não cumulatividade plena (crédito imediato das compras) e fim do imposto escondido no cupom fiscal.",
-                query: "últimas 10 notícias e portarias mais recentes de 2026 sobre o IVA Dual CBS IBS e alíquota de referência"
+                query: "IVA Dual CBS IBS alíquota de referência 2026"
             },
             imposto_seletivo: {
                 titulo: "Imposto Seletivo ('Imposto do Pecado')",
                 resumo: "Trata-se de uma sobretaxa regulatória constitucional voltada para desestimular o consumo de produtos nocivos à saúde humana e ao meio ambiente. Incide sobre bebidas alcoólicas, cigarros, veículos poluentes, refrigerantes, bebidas açucaradas e extração de minérios. Ele é cobrado em uma única etapa da cadeia e não gera crédito acumulável.",
-                query: "últimas 10 notícias e decretos de 2026 sobre o Imposto Seletivo bebidas cigarros veículos minérios"
+                query: "Imposto Seletivo bebidas cigarros veículos minérios 2026"
             },
             cesta_basica: {
                 titulo: "Cesta Básica Nacional Alíquota Zero e Cashback",
                 resumo: "A Reforma Tributária institui a Cesta Básica Nacional Isenta com alíquota ZERO (0%) para uma lista definida de alimentos essenciais para a população. Além disso, cria o mecanismo inédito de Cashback Tributário, que devolve automaticamente parte dos impostos pagos na conta de luz, água e gás para famílias de baixa renda cadastradas no CadÚnico.",
-                query: "últimas 10 notícias de 2026 sobre Cesta Básica Alíquota Zero e devolução de Cashback CadÚnico"
+                query: "Cesta Básica Alíquota Zero devolução Cashback CadÚnico 2026"
             },
             split_payment: {
                 titulo: "Split Payment Bancário e Retenção Automática",
                 resumo: "O Split Payment é o mecanismo tecnológico bancário onde, no exato instante da liquidação financeira da venda (seja por PIX, cartão de crédito ou boleto), a instituição financeira recolhe automaticamente a fatia do imposto (CBS/IBS) diretamente para as contas do Fisco e credita apenas o valor líquido na conta da empresa vendedora.",
-                query: "últimas 10 notícias e normas de 2026 sobre o Split Payment retenção automática bancária da reforma tributária"
+                query: "Split Payment retenção automática bancária reforma tributária 2026"
             },
             principio_destino: {
                 titulo: "Princípio do Destino e Fim da Guerra Fiscal",
                 resumo: "Com o Princípio do Destino, a arrecadação dos tributos (IBS/CBS) passa a ocorrer integralmente no local onde o produto ou serviço é consumido (comprado), e não mais onde ele é produzido (origem). Isso elimina em definitivo os incentivos e benefícios fiscais predatórios concedidos isoladamente por estados, encerrando a guerra fiscal.",
-                query: "últimas 10 notícias de 2026 sobre o Princípio do Destino e distribuição de arrecadação do IBS nos estados e municípios"
+                query: "Princípio do Destino arrecadação IBS estados municípios 2026"
             },
             comite_gestor: {
                 titulo: "Comitê Gestor do IBS (CG-IBS) e Governança",
                 resumo: "O Comitê Gestor do IBS é a entidade pública unificada responsável por gerir, arrecadar, fiscalizar e distribuir a arrecadação do IBS proporcionalmente entre todos os 26 Estados, o Distrito Federal e os 5.570 Municípios do Brasil, operando de forma autônoma sem subordinação política.",
-                query: "últimas 10 notícias e resoluções de 2026 do Comitê Gestor do IBS CG-IBS normas estaduais"
+                query: "Comitê Gestor do IBS CG-IBS normas estaduais 2026"
             }
         };
 
@@ -1236,28 +1179,11 @@ Organize os 10 pontos em uma lista de cartões numerados e legíveis.`;
                 </div>
             `;
 
-            const systemPrompt = `Você é um jornalista e auditor tributário especialista na Reforma Tributária do Brasil em 2026.
-Pesquise via Google Search e liste OBRIGATORIAMENTE as 10 notícias/notificações mais recentes e atualizadas de 2026 do Diário Oficial da União, Congresso e Comitê Gestor sobre o tema solicitado.
-Não traga notícias antigas de anos passados.
-Formate cada uma das 10 notícias de forma clara com:
-1. Data de Publicação / Recência em 2026
-2. Título do Fato / Norma
-3. Resumo executivo do impacto.`;
-
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: info.query }] }],
-                tools: [{ "google_search": {} }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
             try {
-                const response = await fetch(apiUrl, {
+                const response = await fetch('/api/buscar-noticias', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ query: info.query })
                 });
 
                 const result = await response.json();
@@ -1265,30 +1191,12 @@ Formate cada uma das 10 notícias de forma clara com:
 
                 if (candidate && candidate.content?.parts?.[0]?.text) {
                     const text = candidate.content.parts[0].text;
-                    let sources = [];
-                    
-                    const groundingMetadata = candidate.groundingMetadata;
-                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
-                        sources = groundingMetadata.groundingAttributions
-                            .map(attr => ({ uri: attr.web?.uri, title: attr.web?.title }))
-                            .filter(s => s.uri && s.title);
-                    }
-
                     let htmlText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
 
                     container.innerHTML = `
                         <div class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs leading-relaxed text-slate-700 dark:text-slate-300 space-y-3">
                             ${htmlText}
                         </div>
-                        ${sources.length > 0 ? `
-                            <div class="pt-2 flex flex-wrap gap-2">
-                                ${sources.map(s => `
-                                    <a href="${s.uri}" target="_blank" class="text-[10px] bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-300 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-800 flex items-center gap-1 hover:underline">
-                                        <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i> ${s.title}
-                                    </a>
-                                `).join('')}
-                            </div>
-                        ` : ''}
                     `;
                 } else {
                     container.innerHTML = `<div class="p-4 bg-amber-50 text-amber-800 rounded-xl text-xs">Sem notícias recentes de 2026 para este módulo no momento.</div>`;
@@ -1303,7 +1211,7 @@ Formate cada uma das 10 notícias de forma clara com:
             if (modal) modal.classList.add('hidden');
         }
 
-        /* --- BUSCA DAS 10 NOTÍCIAS MAIS RECENTES DE 2026 POR SETOR --- */
+        /* --- BUSCA DAS 10 NOTÍCIAS POR SETOR VIA PROXY SERVIDOR --- */
         async function buscarNoticiasSetor(chaveSetor, nomeSetor) {
             document.getElementById('setor-modal-titulo').innerText = nomeSetor;
             const modal = document.getElementById('setor-modal');
@@ -1316,31 +1224,11 @@ Formate cada uma das 10 notícias de forma clara com:
                 </div>
             `;
 
-            const userQuery = `Pesquise no Diário Oficial da União, Ministério da Fazenda e portais de economia as 10 notícias e atualizações MAIS RECENTES DE 2026 sobre o impacto da Reforma Tributária (CBS, IBS, Imposto Seletivo) no setor de ${nomeSetor}.`;
-
-            const systemPrompt = `Você é um analista tributário e jornalista econômico especialista na Reforma Tributária do Brasil em 2026.
-Pesquise via Google Search e traga OBRIGATORIAMENTE as 10 notícias mais recentes e atualizadas do ano de 2026 do setor de ${nomeSetor}.
-Descarte matérias antigas de anos anteriores.
-Organize as 10 notícias de forma direta:
-1. Data / Recência em 2026
-2. Título da Notícia / Norma
-3. Resumo explicativo do impacto real no setor
-4. Fonte original do governo/imprensa`;
-
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
             try {
-                const response = await fetch(apiUrl, {
+                const response = await fetch('/api/buscar-noticias', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ query: `Reforma Tributaria 2026 setor ${nomeSetor}` })
                 });
 
                 const result = await response.json();
@@ -1348,30 +1236,12 @@ Organize as 10 notícias de forma direta:
 
                 if (candidate && candidate.content?.parts?.[0]?.text) {
                     const text = candidate.content.parts[0].text;
-                    let sources = [];
-                    
-                    const groundingMetadata = candidate.groundingMetadata;
-                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
-                        sources = groundingMetadata.groundingAttributions
-                            .map(attr => ({ uri: attr.web?.uri, title: attr.web?.title }))
-                            .filter(s => s.uri && s.title);
-                    }
-
                     let htmlText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
 
                     container.innerHTML = `
                         <div class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs leading-relaxed text-slate-700 dark:text-slate-300 space-y-3">
                             ${htmlText}
                         </div>
-                        ${sources.length > 0 ? `
-                            <div class="pt-2 flex flex-wrap gap-2">
-                                ${sources.map(s => `
-                                    <a href="${s.uri}" target="_blank" class="text-[10px] bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-300 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-800 flex items-center gap-1 hover:underline">
-                                        <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i> ${s.title}
-                                    </a>
-                                `).join('')}
-                            </div>
-                        ` : ''}
                     `;
                 } else {
                     container.innerHTML = `<div class="p-4 bg-amber-50 text-amber-800 rounded-xl text-xs">Nenhuma notícia recente de 2026 encontrada para este setor no momento.</div>`;
@@ -1391,7 +1261,7 @@ Organize as 10 notícias de forma direta:
             calcularImpostos();
         };
 
-        /* --- EXPLICIT GLOBAL WINDOW BINDINGS (Fixes ReferenceError in inline onclick) --- */
+        /* --- EXPLICIT GLOBAL WINDOW BINDINGS --- */
         window.switchTab = switchTab;
         window.toggleDarkMode = toggleDarkMode;
         window.toggleMobileMenu = toggleMobileMenu;
