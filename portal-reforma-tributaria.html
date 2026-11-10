@@ -1261,6 +1261,250 @@
             calcularImpostos();
         };
 
+        /* --- EXIBIÇÃO E BUSCA ESTRUTURADA DE NOTÍCIAS --- */
+        function escaparHTML(valor) {
+            return String(valor ?? '').replace(/[&<>"']/g, caractere => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[caractere]);
+        }
+
+        function urlSegura(valor) {
+            try {
+                const url = new URL(String(valor || ''));
+                return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+            } catch {
+                return '';
+            }
+        }
+
+        function extrairListaNoticias(dados) {
+            const candidatos = dados?.candidates || [];
+            const textos = candidatos.flatMap(candidato =>
+                candidato?.content?.parts?.map(parte => parte?.text).filter(Boolean) || []
+            );
+
+            for (const texto of textos) {
+                try {
+                    const limpo = texto.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+                    const interpretado = JSON.parse(limpo);
+                    if (Array.isArray(interpretado)) return interpretado;
+                    if (Array.isArray(interpretado?.news)) return interpretado.news;
+                    if (Array.isArray(interpretado?.noticias)) return interpretado.noticias;
+                    if (Array.isArray(interpretado?.articles)) return interpretado.articles;
+                    if (Array.isArray(interpretado?.resultados)) return interpretado.resultados;
+                } catch {
+                    // O texto não é JSON estruturado; continua procurando os dados da resposta.
+                }
+            }
+
+            const listas = [
+                dados?.news,
+                dados?.noticias,
+                dados?.articles,
+                dados?.resultados,
+                dados?.data?.news,
+                dados?.data?.noticias,
+                dados?.data?.articles
+            ];
+            const lista = listas.find(Array.isArray);
+            if (lista) return lista;
+
+            const trechos = candidatos.flatMap(candidato =>
+                candidato?.groundingMetadata?.groundingChunks ||
+                candidato?.grounding_metadata?.grounding_chunks ||
+                []
+            );
+
+            return trechos.map(trecho => {
+                const web = trecho?.web || trecho?.retrievedContext || trecho;
+                return {
+                    title: web?.title || '',
+                    url: web?.uri || web?.url || '',
+                    summary: web?.snippet || web?.description || ''
+                };
+            });
+        }
+
+        function renderizarNoticias(container, dados, titulo) {
+            const itens = extrairListaNoticias(dados)
+                .map(item => {
+                    const url = urlSegura(item?.url || item?.link || item?.uri || item?.fonte_url);
+                    return {
+                        titulo: item?.title || item?.titulo || item?.headline || 'Notícia sem título',
+                        resumo: item?.summary || item?.resumo || item?.description || item?.snippet || '',
+                        url,
+                        fonte: item?.source || item?.fonte || item?.publisher || '',
+                        data: item?.date || item?.data || item?.publishedAt || item?.published_at || ''
+                    };
+                })
+                .filter(item => item.url)
+                .filter((item, indice, todos) => todos.findIndex(outro => outro.url === item.url) === indice)
+                .slice(0, 10);
+
+            if (!itens.length) {
+                container.innerHTML = `
+                    <div class="p-5 rounded-xl border border-amber-300 bg-amber-50 dark:bg-amber-950/40 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200">
+                        A API não retornou notícias em formato estruturado com links. Para exibir resumos e fontes corretamente, o servidor precisa devolver uma lista de notícias com título, resumo e URL.
+                    </div>
+                `;
+                return;
+            }
+
+            const semResumo = itens.some(item => !item.resumo);
+            container.innerHTML = `
+                <div class="glass-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-700 pb-3">
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white">${escaparHTML(titulo)}</h4>
+                        <span class="text-[11px] text-slate-500 dark:text-slate-400">${itens.length} notícia(s) retornada(s)</span>
+                    </div>
+                    <div class="space-y-3">
+                        ${itens.map((item, indice) => `
+                            <article class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <span class="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950 px-2 py-1 rounded-full">Notícia ${indice + 1}</span>
+                                    ${item.data ? `<span class="text-[10px] text-slate-500 dark:text-slate-400">${escaparHTML(item.data)}</span>` : ''}
+                                </div>
+                                <h5 class="font-bold text-sm text-slate-900 dark:text-white">${escaparHTML(item.titulo)}</h5>
+                                <p class="mt-2 text-xs leading-relaxed text-slate-700 dark:text-slate-300">${item.resumo ? escaparHTML(item.resumo) : 'A API não forneceu um resumo individual para esta notícia.'}</p>
+                                <div class="mt-3 flex flex-wrap items-center justify-between gap-2">
+                                    ${item.fonte ? `<span class="text-[10px] text-slate-500 dark:text-slate-400">Fonte: ${escaparHTML(item.fonte)}</span>` : ''}
+                                    <a href="${escaparHTML(item.url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline">
+                                        Acessar notícia <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    </a>
+                                </div>
+                            </article>
+                        `).join('')}
+                    </div>
+                    ${semResumo ? '<p class="text-[11px] text-amber-700 dark:text-amber-300">Alguns resumos não vieram na resposta da API. O servidor precisa fornecê-los para cada notícia.</p>' : ''}
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400">A lista segue a ordem retornada pela API. Confira a data e o conteúdo na fonte original.</p>
+                </div>
+            `;
+        }
+
+        async function solicitarNoticias(query) {
+            const response = await fetch('/api/buscar-noticias', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query })
+            });
+
+            let dados;
+            try {
+                dados = await response.json();
+            } catch {
+                throw new Error('O servidor não retornou uma resposta JSON válida.');
+            }
+
+            if (!response.ok) {
+                throw new Error(dados?.error || dados?.message || `Erro do servidor (${response.status}).`);
+            }
+
+            return dados;
+        }
+
+        function mostrarCarregamentoNoticias(container, mensagem) {
+            container.innerHTML = `
+                <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 text-center space-y-3">
+                    <i class="fa-solid fa-spinner animate-spin text-2xl text-brand-emerald"></i>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 font-semibold">${escaparHTML(mensagem)}</p>
+                </div>
+            `;
+        }
+
+        function mostrarErroNoticias(container, erro) {
+            container.innerHTML = `
+                <div class="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 text-xs">
+                    Não foi possível buscar as notícias: ${escaparHTML(erro?.message || 'erro inesperado')}
+                </div>
+            `;
+        }
+
+        async function buscarAtualizacoesOficiaisDOU() {
+            switchTab('gemini-ia');
+            const container = document.getElementById('gemini-feed-container');
+            const spin = document.getElementById('gemini-spin');
+            const icon = document.getElementById('gemini-icon');
+
+            if (spin) spin.classList.remove('hidden');
+            if (icon) icon.classList.add('hidden');
+            mostrarCarregamentoNoticias(container, 'Buscando as notícias mais recentes sobre a Reforma Tributária...');
+
+            try {
+                const dados = await solicitarNoticias('Reforma Tributária CBS IBS legislação notícias recentes Brasil');
+                renderizarNoticias(container, dados, 'Notícias recentes sobre a Reforma Tributária');
+            } catch (erro) {
+                mostrarErroNoticias(container, erro);
+            } finally {
+                if (spin) spin.classList.add('hidden');
+                if (icon) icon.classList.remove('hidden');
+            }
+        }
+
+        async function buscarAtualizacoesGemini() {
+            await buscarAtualizacoesOficiaisDOU();
+        }
+
+        async function consultarGeminiEspecifico() {
+            const campo = document.getElementById('gemini-custom-prompt');
+            const consulta = campo?.value?.trim();
+            if (!consulta || consulta.length < 3) {
+                campo?.focus();
+                return;
+            }
+
+            switchTab('gemini-ia');
+            const container = document.getElementById('gemini-feed-container');
+            mostrarCarregamentoNoticias(container, `Buscando notícias sobre: ${consulta}`);
+
+            try {
+                const dados = await solicitarNoticias(consulta);
+                renderizarNoticias(container, dados, `Notícias recentes: ${consulta}`);
+            } catch (erro) {
+                mostrarErroNoticias(container, erro);
+            }
+        }
+
+        async function abrirDetalheModulo(chave) {
+            const info = modulosInfo[chave];
+            if (!info) return;
+
+            document.getElementById('mod-titulo').innerText = info.titulo;
+            document.getElementById('mod-resumo').innerText = info.resumo;
+
+            const modal = document.getElementById('modulo-modal');
+            const container = document.getElementById('mod-noticias-container');
+            modal.classList.remove('hidden');
+            mostrarCarregamentoNoticias(container, `Buscando notícias sobre ${info.titulo}...`);
+
+            try {
+                const dados = await solicitarNoticias(info.query);
+                renderizarNoticias(container, dados, `Notícias recentes: ${info.titulo}`);
+            } catch (erro) {
+                mostrarErroNoticias(container, erro);
+            }
+        }
+
+        async function buscarNoticiasSetor(chaveSetor, nomeSetor) {
+            const titulo = document.getElementById('setor-modal-titulo');
+            const modal = document.getElementById('setor-modal');
+            const container = document.getElementById('setor-noticias-container');
+
+            titulo.innerText = nomeSetor;
+            modal.classList.remove('hidden');
+            mostrarCarregamentoNoticias(container, `Buscando notícias recentes sobre ${nomeSetor}...`);
+
+            try {
+                const dados = await solicitarNoticias(`Reforma Tributária CBS IBS impacto no setor ${nomeSetor} notícias recentes Brasil`);
+                renderizarNoticias(container, dados, `Notícias recentes: ${nomeSetor}`);
+            } catch (erro) {
+                mostrarErroNoticias(container, erro);
+            }
+        }
+
         /* --- EXPLICIT GLOBAL WINDOW BINDINGS --- */
         window.switchTab = switchTab;
         window.toggleDarkMode = toggleDarkMode;
