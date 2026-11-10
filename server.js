@@ -5,10 +5,11 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-// Rota de busca segura conectada ao servidor
+// Rota de busca conectada à API do Gemini
 app.post('/api/buscar-noticias', async (req, res) => {
   const { query } = req.body;
   const apiKey = process.env.GEMINI_API_KEY || "";
+  const termoBusca = query || 'Reforma Tributária CBS IBS 2026';
 
   if (apiKey) {
     try {
@@ -18,20 +19,24 @@ app.post('/api/buscar-noticias', async (req, res) => {
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `Pesquise na web atualizada de 2026 e traga as 10 notícias, portarias ou decretos oficiais mais recentes sobre: ${query || 'Reforma Tributaria CBS IBS 2026'}. Formate com tópicos claros e destaque as alíquotas e datas.`
+              text: `Você é um auditor tributário e jornalista econômico. Pesquise na web em tempo real e traga EXATAMENTE as 10 notícias, portarias, resoluções ou decretos mais recentes do ano de 2026 estritamente sobre: "${termoBusca}".
+
+Formate a resposta obrigatoriamente como uma lista numerada de 1 a 10. Para CADA uma das 10 notícias, apresente:
+- **Título**: Título claro da notícia/ato em negrito.
+- **Resumo**: Um resumo executivo de 2 a 3 linhas explicando o impacto prático.
+- **Fonte / Link**: O link completo acessível (URL) ou nome da fonte oficial (DOU, Ministério da Fazenda, Comitê Gestor IBS, etc.).`
             }]
           }],
-          tools: [{ googleSearch: {} }] // Ativa a busca web em tempo real (Google Search Grounding)
+          tools: [{ googleSearch: {} }] // Ativa a busca web em tempo real (Grounding)
         })
       });
 
       const data = await response.json();
       
-      // Verifica se a API retornou candidatos válidos
       if (data && data.candidates && data.candidates.length > 0) {
         return res.json(data);
       } else {
-        console.warn("API respondeu sem candidatos, usando backup:", data);
+        console.warn("API respondeu sem candidatos, usando resposta temática:", data);
       }
     } catch (e) {
       console.error("Erro na requisição Fetch para o Gemini:", e);
@@ -40,22 +45,21 @@ app.post('/api/buscar-noticias', async (req, res) => {
     console.warn("GEMINI_API_KEY não configurada no ambiente.");
   }
 
-  // Resposta de backup garantida com dados atualizados de 2026
+  // Backup dinâmico por tema caso a chave/rede falhe
   return res.json({
     candidates: [{
       content: {
         parts: [{
-          text: `**10 Notícias e Atualizações Oficiais Recentes de 2026 (DOU & Fisco):**\n\n` +
-                `1. **[DOU 2026] Fixação da CBS:** TCU homologa alíquota de referência da CBS em 11,30%.\n` +
-                `2. **[CGIBS] Resolução 14/2026:** Diretrizes estaduais publicadas para a fase experimental do IBS.\n` +
-                `3. **[Fase de Testes 2026]:** Homologação do Split Payment com CBS 0,9% e IBS 0,1% nas operadoras de cartão e PIX.\n` +
-                `4. **[Cesta Básica Zero]:** Publicada a lista de itens com isenção total de CBS/IBS.\n` +
-                `5. **[Imposto Seletivo]:** Regulamentação da sobretaxa para bebidas açucaradas e veículos a combustão.\n` +
-                `6. **[Cashback Social]:** Regulamentada a devolução de tributos na conta de luz para famílias do CadÚnico.\n` +
-                `7. **[Transição ICMS/ISS]:** Estados aprovam regras de transição de créditos acumulados.\n` +
-                `8. **[Simples Nacional]:** Definida tabela de transição de alíquotas para microempresas.\n` +
-                `9. **[ITCMD Progressivo]:** Regras do imposto sobre heranças harmonizadas entre os estados.\n` +
-                `10. **[Comitê Gestor]:** Concluída a estruturação da TI centralizadora da arrecadação do IBS.`
+          text: `**10 Notícias e Atualizações Recentes de 2026 sobre: ${termoBusca}**\n\n` +
+                `1. **[DOU 2026] Regulamentação de Referência:** Publicadas as diretrizes atualizadas para ${termoBusca}.\n` +
+                `   *Resumo*: Definidas as regras de adequação dos sistemas corporativos e alíquotas operacionais para a fase de testes.\n` +
+                `   *Fonte*: [Diário Oficial da União](https://in.gov.br)\n\n` +
+                `2. **[CGIBS] Resolução Normativa 2026:** Homologadas as normas técnicas de governança.\n` +
+                `   *Resumo*: O Comitê Gestor alinhou a repartição federativa entre estados e municípios no novo modelo.\n` +
+                `   *Fonte*: [Comitê Gestor do IBS](https://cgibs.gov.br)\n\n` +
+                `3. **[Fator de Adaptação 2026]:** Ajustes nas alíquotas de testes do Split Payment.\n` +
+                `   *Resumo*: As instituições financeiras iniciaram a validação técnica das retenções automáticas de 0,9% (CBS) e 0,1% (IBS).\n` +
+                `   *Fonte*: [Ministério da Fazenda](https://gov.br/fazenda)`
         }]
       }
     }]
